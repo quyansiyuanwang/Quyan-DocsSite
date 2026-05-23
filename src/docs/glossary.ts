@@ -14,7 +14,8 @@ const glossaryEntries: GlossaryEntry[] = [
     title: { en: "API", "zh-CN": "API（接口）" },
     description: {
       en: "API stands for Application Programming Interface. In this product, it usually means an address and rule set that lets another program send requests to the platform.",
-      "zh-CN": "API 是“应用程序编程接口”。在本产品里，通常指别的程序访问本平台时使用的接口地址与调用规则。",
+      "zh-CN":
+        "API 是“应用程序编程接口”。在本产品里，通常指别的程序访问本平台时使用的接口地址与调用规则。",
     },
   },
   {
@@ -23,7 +24,8 @@ const glossaryEntries: GlossaryEntry[] = [
     title: { en: "OpenAPI", "zh-CN": "OpenAPI" },
     description: {
       en: "OpenAPI is a standard format for describing APIs. It helps tools generate interface docs, test requests, and code clients.",
-      "zh-CN": "OpenAPI 是一种描述接口的标准格式，可用于生成接口文档、测试请求和客户端代码。",
+      "zh-CN":
+        "OpenAPI 是一种描述接口的标准格式，可用于生成接口文档、测试请求和客户端代码。",
     },
   },
   {
@@ -32,7 +34,8 @@ const glossaryEntries: GlossaryEntry[] = [
     title: { en: "Swagger", "zh-CN": "Swagger" },
     description: {
       en: "Swagger is a common interface-document viewer. In this site it refers to the API docs page used to inspect and test endpoints.",
-      "zh-CN": "Swagger 是常见的接口文档查看工具。在本站里通常指用于查看和测试接口的 API 文档页。",
+      "zh-CN":
+        "Swagger 是常见的接口文档查看工具。在本站里通常指用于查看和测试接口的 API 文档页。",
     },
   },
   {
@@ -41,7 +44,8 @@ const glossaryEntries: GlossaryEntry[] = [
     title: { en: "Endpoint", "zh-CN": "端点" },
     description: {
       en: "An endpoint is a specific request address or function entry of an API, such as a URL used for reading data or submitting data.",
-      "zh-CN": "端点指 API 中某个具体的请求地址或功能入口，例如读取数据或提交数据的 URL。",
+      "zh-CN":
+        "端点指 API 中某个具体的请求地址或功能入口，例如读取数据或提交数据的 URL。",
     },
   },
   {
@@ -50,7 +54,8 @@ const glossaryEntries: GlossaryEntry[] = [
     title: { en: "Token", "zh-CN": "Token（令牌）" },
     description: {
       en: "A token is a credential string used to identify or authorize a request. You can think of it as a temporary digital pass used by a program or user session.",
-      "zh-CN": "Token 是用于标识或授权请求的一段凭证字符串。可以把它理解为程序或会话访问系统时使用的临时数字通行证。",
+      "zh-CN":
+        "Token 是用于标识或授权请求的一段凭证字符串。可以把它理解为程序或会话访问系统时使用的临时数字通行证。",
     },
   },
   {
@@ -59,7 +64,8 @@ const glossaryEntries: GlossaryEntry[] = [
     title: { en: "Relay token", "zh-CN": "转发 Token" },
     description: {
       en: "A relay token is a token used specifically for traffic forwarding. It normally carries routing, quota, or channel-related control meaning.",
-      "zh-CN": "转发 Token 是专门用于流量转发的令牌，通常还带有路由、额度或渠道控制含义。",
+      "zh-CN":
+        "转发 Token 是专门用于流量转发的令牌，通常还带有路由、额度或渠道控制含义。",
     },
   },
   {
@@ -68,7 +74,8 @@ const glossaryEntries: GlossaryEntry[] = [
     title: { en: "Access key / API key", "zh-CN": "访问密钥 / API Key" },
     description: {
       en: "An access key or API key is a long-term credential used by scripts, tools, or external services to call the platform without interactive login.",
-      "zh-CN": "访问密钥或 API Key 是供脚本、工具或外部服务调用平台时使用的长期凭证，不需要人工交互登录。",
+      "zh-CN":
+        "访问密钥或 API Key 是供脚本、工具或外部服务调用平台时使用的长期凭证，不需要人工交互登录。",
     },
   },
   {
@@ -86,7 +93,8 @@ const glossaryEntries: GlossaryEntry[] = [
     title: { en: "IP / IP address", "zh-CN": "IP / IP 地址" },
     description: {
       en: "An IP address is the network identity used by a device on the internet or an internal network. It helps systems know where a request comes from and where a response should go.",
-      "zh-CN": "IP 地址是设备在互联网或内网中的网络身份标识。系统通过它判断请求来自哪里，以及响应要发往哪里。",
+      "zh-CN":
+        "IP 地址是设备在互联网或内网中的网络身份标识。系统通过它判断请求来自哪里，以及响应要发往哪里。",
     },
   },
   {
@@ -104,7 +112,8 @@ const glossaryEntries: GlossaryEntry[] = [
     title: { en: "JWT", "zh-CN": "JWT" },
     description: {
       en: "JWT stands for JSON Web Token. It is a token format often used to store login identity and expiry information.",
-      "zh-CN": "JWT 是 JSON Web Token 的缩写，是一种常用于保存登录身份和过期信息的令牌格式。",
+      "zh-CN":
+        "JWT 是 JSON Web Token 的缩写，是一种常用于保存登录身份和过期信息的令牌格式。",
     },
   },
   {
@@ -113,7 +122,8 @@ const glossaryEntries: GlossaryEntry[] = [
     title: { en: "Passkey", "zh-CN": "Passkey（通行密钥）" },
     description: {
       en: "A passkey is a modern passwordless login method, usually based on the device's secure key storage plus fingerprint, face, or system unlock.",
-      "zh-CN": "Passkey 是一种现代无密码登录方式，通常依赖设备安全密钥、指纹、人脸或系统解锁能力。",
+      "zh-CN":
+        "Passkey 是一种现代无密码登录方式，通常依赖设备安全密钥、指纹、人脸或系统解锁能力。",
     },
   },
   {
@@ -122,7 +132,8 @@ const glossaryEntries: GlossaryEntry[] = [
     title: { en: "2FA / two-factor verification", "zh-CN": "2FA / 双重验证" },
     description: {
       en: "2FA means a second verification step after password entry, such as email code, authenticator code, or device confirmation.",
-      "zh-CN": "2FA 指在密码之外再做一次身份确认，例如邮箱验证码、验证器动态码或设备确认。",
+      "zh-CN":
+        "2FA 指在密码之外再做一次身份确认，例如邮箱验证码、验证器动态码或设备确认。",
     },
   },
   {
@@ -140,7 +151,8 @@ const glossaryEntries: GlossaryEntry[] = [
     title: { en: "Webhook", "zh-CN": "Webhook" },
     description: {
       en: "A webhook is an automatic HTTP callback. When an event happens, the system pushes a message to a URL you configured.",
-      "zh-CN": "Webhook 是一种自动 HTTP 回调。当事件发生时，系统会把消息主动推送到你配置好的 URL。",
+      "zh-CN":
+        "Webhook 是一种自动 HTTP 回调。当事件发生时，系统会把消息主动推送到你配置好的 URL。",
     },
   },
   {
@@ -149,7 +161,8 @@ const glossaryEntries: GlossaryEntry[] = [
     title: { en: "Quota", "zh-CN": "额度 / 配额" },
     description: {
       en: "Quota means the allowed amount of usage within a period or rule scope, such as request count, token count, or money limit.",
-      "zh-CN": "额度或配额，表示在某个时间范围或规则范围内允许使用的量，例如请求次数、Token 数或金额上限。",
+      "zh-CN":
+        "额度或配额，表示在某个时间范围或规则范围内允许使用的量，例如请求次数、Token 数或金额上限。",
     },
   },
   {
@@ -167,7 +180,8 @@ const glossaryEntries: GlossaryEntry[] = [
     title: { en: "Failover", "zh-CN": "故障转移" },
     description: {
       en: "Failover means switching traffic to another available target when the current target fails, times out, or becomes unhealthy.",
-      "zh-CN": "故障转移是指当前目标异常、超时或不健康时，把流量切换到其他可用目标。",
+      "zh-CN":
+        "故障转移是指当前目标异常、超时或不健康时，把流量切换到其他可用目标。",
     },
   },
   {
@@ -185,7 +199,8 @@ const glossaryEntries: GlossaryEntry[] = [
     title: { en: "Latency", "zh-CN": "延迟" },
     description: {
       en: "Latency is the time delay between sending a request and receiving a response. Lower latency usually means faster interaction.",
-      "zh-CN": "延迟是从发出请求到收到响应之间的时间。延迟越低，通常表示交互越快。",
+      "zh-CN":
+        "延迟是从发出请求到收到响应之间的时间。延迟越低，通常表示交互越快。",
     },
   },
   {
@@ -194,7 +209,8 @@ const glossaryEntries: GlossaryEntry[] = [
     title: { en: "Audit log", "zh-CN": "审计日志" },
     description: {
       en: "An audit log is a record used to trace who did what, when it happened, and what changed for accountability and investigation.",
-      "zh-CN": "审计日志是用于追踪“谁在什么时间做了什么、造成了什么变化”的记录，便于追责与排查。",
+      "zh-CN":
+        "审计日志是用于追踪“谁在什么时间做了什么、造成了什么变化”的记录，便于追责与排查。",
     },
   },
   {
@@ -203,7 +219,8 @@ const glossaryEntries: GlossaryEntry[] = [
     title: { en: "RBAC", "zh-CN": "RBAC（基于角色的权限控制）" },
     description: {
       en: "RBAC stands for Role-Based Access Control. Permissions are assigned through roles or groups instead of being configured one by one for every action.",
-      "zh-CN": "RBAC 是“基于角色的权限控制”，即通过角色或群组授予权限，而不是为每个动作逐项单独配置。",
+      "zh-CN":
+        "RBAC 是“基于角色的权限控制”，即通过角色或群组授予权限，而不是为每个动作逐项单独配置。",
     },
   },
   {
@@ -212,7 +229,8 @@ const glossaryEntries: GlossaryEntry[] = [
     title: { en: "Proxy / relay", "zh-CN": "代理 / 转发" },
     description: {
       en: "Proxy or relay means this platform receives a request first, then forwards it to another service and returns the result back.",
-      "zh-CN": "代理或转发，表示请求先到达本平台，再由本平台转发给其他服务，并把结果返回给调用方。",
+      "zh-CN":
+        "代理或转发，表示请求先到达本平台，再由本平台转发给其他服务，并把结果返回给调用方。",
     },
   },
   {
@@ -221,7 +239,8 @@ const glossaryEntries: GlossaryEntry[] = [
     title: { en: "Channel", "zh-CN": "渠道" },
     description: {
       en: "A channel is a routing unit or provider path used by the platform to send traffic to a specific upstream service or model source.",
-      "zh-CN": "渠道是平台把流量发送到某个上游服务或模型来源时使用的路由单元或提供方通道。",
+      "zh-CN":
+        "渠道是平台把流量发送到某个上游服务或模型来源时使用的路由单元或提供方通道。",
     },
   },
   {
@@ -230,7 +249,8 @@ const glossaryEntries: GlossaryEntry[] = [
     title: { en: "Model", "zh-CN": "模型" },
     description: {
       en: "A model usually means an AI model or service capability option that determines how requests are processed and billed.",
-      "zh-CN": "模型通常指 AI 模型或某种服务能力选项，它会影响请求如何处理以及如何计费。",
+      "zh-CN":
+        "模型通常指 AI 模型或某种服务能力选项，它会影响请求如何处理以及如何计费。",
     },
   },
   {
@@ -239,7 +259,8 @@ const glossaryEntries: GlossaryEntry[] = [
     title: { en: "URL", "zh-CN": "URL（链接地址）" },
     description: {
       en: "A URL is a web address used to open a page or send a request, such as a docs page link or API request address.",
-      "zh-CN": "URL 是网页或接口请求使用的链接地址，例如文档页面链接或 API 请求地址。",
+      "zh-CN":
+        "URL 是网页或接口请求使用的链接地址，例如文档页面链接或 API 请求地址。",
     },
   },
   {
@@ -257,7 +278,8 @@ const glossaryEntries: GlossaryEntry[] = [
     title: { en: "Monthly pass", "zh-CN": "月卡" },
     description: {
       en: "A monthly pass is a time-based package that usually grants quota, balance benefit, or discounted usage during its validity period.",
-      "zh-CN": "月卡是一种按时间生效的套餐，通常会在有效期内提供额度、余额权益或优惠价格。",
+      "zh-CN":
+        "月卡是一种按时间生效的套餐，通常会在有效期内提供额度、余额权益或优惠价格。",
     },
   },
   {
@@ -266,7 +288,8 @@ const glossaryEntries: GlossaryEntry[] = [
     title: { en: "Redemption code", "zh-CN": "兑换码" },
     description: {
       en: "A redemption code is a code that can be exchanged for balance, quota, membership benefit, or another predefined reward.",
-      "zh-CN": "兑换码是可用于换取余额、额度、会员权益或其他预设奖励的一串代码。",
+      "zh-CN":
+        "兑换码是可用于换取余额、额度、会员权益或其他预设奖励的一串代码。",
     },
   },
 ];

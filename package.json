@@ -2,14 +2,19 @@
   "name": "appserver-docs-site",
   "private": true,
   "type": "module",
-  "packageManager": "pnpm@11.1.2+sha512.415a1cc25974731e75455c1468371be74c5aa5fb7621b50d4056d222451609f11412f23fd602e6169f1e060466641f798597e1be961a10688836a67b16569499",
+  "packageManager": "pnpm@11.2.2+sha512.36e6621fad506178936455e70247b8808ef4ec25797a9f437a93281a020484e2607f6a469a22e982987c3dbb8866e3071514ab10a4a1749e06edcd1ec118436f",
   "scripts": {
     "dev": "vite",
     "prod": "vite --mode prod",
     "type-check": "vue-tsc --build",
     "build": "pnpm run type-check && vite build",
     "build:prod": "pnpm run type-check && vite build --mode prod",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "lint": "eslint . --fix --cache",
+    "lint:check": "eslint . --cache",
+    "format": "prettier --write src/",
+    "format:check": "prettier --check src/",
+    "lint-format-check": "pnpm run lint && pnpm run format && pnpm run type-check"
   },
   "dependencies": {
     "marked": "^5.1.1",
@@ -17,10 +22,16 @@
     "vue-router": "^4.6.3"
   },
   "devDependencies": {
+    "@vue/eslint-config-prettier": "^10.2.0",
+    "@vue/eslint-config-typescript": "^14.6.0",
     "@vue/tsconfig": "^0.8.1",
     "@tsconfig/node22": "^22.0.2",
     "@types/node": "^22.18.11",
     "@vitejs/plugin-vue": "^6.0.1",
+    "eslint": "^9.37.0",
+    "eslint-plugin-vue": "~10.5.0",
+    "jiti": "^2.6.1",
+    "prettier": "3.6.2",
     "typescript": "~5.9.0",
     "vite": "npm:rolldown-vite@^7.3.1",
     "vue-tsc": "^3.1.1"
