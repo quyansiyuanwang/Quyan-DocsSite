@@ -354,7 +354,13 @@ const glossaryEntries: GlossaryEntry[] = [
   },
   {
     id: "provider",
-    aliases: ["service provider", "model provider", "vendor", "供应商", "服务提供方"],
+    aliases: [
+      "service provider",
+      "model provider",
+      "vendor",
+      "供应商",
+      "服务提供方",
+    ],
     title: { en: "Provider / vendor", "zh-CN": "供应商 / 提供方" },
     description: {
       en: "A provider or vendor is the upstream service source that actually offers a model, API capability, or external resource used by this platform.",
@@ -374,7 +380,14 @@ const glossaryEntries: GlossaryEntry[] = [
   },
   {
     id: "http-status",
-    aliases: ["http status", "status code", "http code", "状态码", "http 状态码", "http状态码"],
+    aliases: [
+      "http status",
+      "status code",
+      "http code",
+      "状态码",
+      "http 状态码",
+      "http状态码",
+    ],
     title: { en: "HTTP status code", "zh-CN": "HTTP 状态码" },
     description: {
       en: "An HTTP status code is a numeric result code such as 200, 404, or 500 that tells whether a request succeeded, failed, or needs further action.",
@@ -384,7 +397,13 @@ const glossaryEntries: GlossaryEntry[] = [
   },
   {
     id: "payload",
-    aliases: ["payload", "request payload", "response payload", "载荷", "数据体"],
+    aliases: [
+      "payload",
+      "request payload",
+      "response payload",
+      "载荷",
+      "数据体",
+    ],
     title: { en: "Payload", "zh-CN": "载荷 / 数据体" },
     description: {
       en: "Payload means the main data content sent in a request or returned in a response, excluding surrounding protocol information.",
@@ -424,7 +443,13 @@ const glossaryEntries: GlossaryEntry[] = [
   },
   {
     id: "monitoring",
-    aliases: ["monitoring", "health monitor", "service monitor", "监控", "监测"],
+    aliases: [
+      "monitoring",
+      "health monitor",
+      "service monitor",
+      "监控",
+      "监测",
+    ],
     title: { en: "Monitoring", "zh-CN": "监控" },
     description: {
       en: "Monitoring means continuously observing service health, performance, errors, or security signals so issues can be detected and handled early.",
@@ -464,7 +489,13 @@ const glossaryEntries: GlossaryEntry[] = [
   },
   {
     id: "step-up-auth",
-    aliases: ["step-up", "step-up authentication", "step-up verification", "步进验证", "step up"],
+    aliases: [
+      "step-up",
+      "step-up authentication",
+      "step-up verification",
+      "步进验证",
+      "step up",
+    ],
     title: { en: "Step-up verification", "zh-CN": "Step-up 验证" },
     description: {
       en: "Step-up verification is an extra security check triggered for sensitive or high-risk actions, even when the user is already logged in.",
@@ -474,8 +505,17 @@ const glossaryEntries: GlossaryEntry[] = [
   },
   {
     id: "trusted-window",
-    aliases: ["trusted window", "trusted-device", "trusted device", "受信窗口", "受信设备"],
-    title: { en: "Trusted window / trusted device", "zh-CN": "受信窗口 / 受信设备" },
+    aliases: [
+      "trusted window",
+      "trusted-device",
+      "trusted device",
+      "受信窗口",
+      "受信设备",
+    ],
+    title: {
+      en: "Trusted window / trusted device",
+      "zh-CN": "受信窗口 / 受信设备",
+    },
     description: {
       en: "A trusted window or trusted device period means the system temporarily remembers that a device already passed verification, reducing repeated checks for a limited time.",
       "zh-CN":
@@ -554,7 +594,14 @@ const glossaryEntries: GlossaryEntry[] = [
   },
   {
     id: "rpm-tpm",
-    aliases: ["rpm", "tpm", "requests per minute", "tokens per minute", "每分钟请求数", "每分钟 token 数"],
+    aliases: [
+      "rpm",
+      "tpm",
+      "requests per minute",
+      "tokens per minute",
+      "每分钟请求数",
+      "每分钟 token 数",
+    ],
     title: { en: "RPM / TPM", "zh-CN": "RPM / TPM" },
     description: {
       en: "RPM means requests per minute, and TPM means tokens per minute. They are common throughput metrics used to observe usage intensity and capacity.",
@@ -634,7 +681,12 @@ const glossaryEntries: GlossaryEntry[] = [
   },
   {
     id: "event-subscription",
-    aliases: ["event subscription", "notification event", "事件订阅", "通知事件"],
+    aliases: [
+      "event subscription",
+      "notification event",
+      "事件订阅",
+      "通知事件",
+    ],
     title: { en: "Event subscription", "zh-CN": "事件订阅" },
     description: {
       en: "An event subscription defines which system events should trigger a notification, webhook delivery, or another automated response.",
