@@ -1,0 +1,132 @@
+:root {
+  color-scheme: light dark;
+  --docs-bg: #f8fafc;
+  --docs-bg-grid: rgba(148, 163, 184, 0.08);
+  --docs-bg-glow-1: rgba(37, 99, 235, 0.08);
+  --docs-bg-glow-2: rgba(14, 165, 233, 0.08);
+  --docs-surface: rgba(255, 255, 255, 0.92);
+  --docs-surface-strong: #ffffff;
+  --docs-surface-soft: #f8fbff;
+  --docs-surface-muted: #eef2f7;
+  --docs-border: rgba(148, 163, 184, 0.18);
+  --docs-border-strong: rgba(100, 116, 139, 0.22);
+  --docs-text: #0f172a;
+  --docs-text-strong: #020617;
+  --docs-muted: #475569;
+  --docs-muted-soft: #64748b;
+  --docs-primary: #2563eb;
+  --docs-primary-strong: #1d4ed8;
+  --docs-primary-soft: rgba(37, 99, 235, 0.12);
+  --docs-accent: #0ea5e9;
+  --docs-accent-soft: rgba(14, 165, 233, 0.1);
+  --docs-success: #16a34a;
+  --docs-shadow: 0 16px 40px rgba(15, 23, 42, 0.06);
+  --docs-shadow-soft: 0 8px 22px rgba(15, 23, 42, 0.05);
+  --docs-max-width: 1480px;
+  --docs-topbar-start: #0f172a;
+  --docs-topbar-end: #111827;
+  --docs-topbar-border: rgba(148, 163, 184, 0.16);
+  --docs-topbar-text: #e5eefc;
+  --docs-topbar-muted: rgba(226, 232, 240, 0.68);
+  --docs-topbar-pill: rgba(255, 255, 255, 0.06);
+  --docs-topbar-pill-border: rgba(148, 163, 184, 0.16);
+  --docs-hero-start: #0f172a;
+  --docs-hero-end: #111827;
+  --docs-hero-border: rgba(148, 163, 184, 0.16);
+  --docs-hero-text: #eff6ff;
+  --docs-hero-muted: rgba(226, 232, 240, 0.82);
+  --docs-code-bg: #07111f;
+  --docs-code-text: #e2e8f0;
+  --docs-table-bg: #ffffff;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --docs-bg: #07111f;
+    --docs-bg-grid: rgba(148, 163, 184, 0.05);
+    --docs-bg-glow-1: rgba(59, 130, 246, 0.12);
+    --docs-bg-glow-2: rgba(14, 165, 233, 0.12);
+    --docs-surface: rgba(15, 23, 42, 0.78);
+    --docs-surface-strong: rgba(15, 23, 42, 0.92);
+    --docs-surface-soft: rgba(15, 23, 42, 0.72);
+    --docs-surface-muted: rgba(15, 23, 42, 0.56);
+    --docs-border: rgba(148, 163, 184, 0.16);
+    --docs-border-strong: rgba(148, 163, 184, 0.24);
+    --docs-text: #e2e8f0;
+    --docs-text-strong: #f8fafc;
+    --docs-muted: #cbd5e1;
+    --docs-muted-soft: #94a3b8;
+    --docs-primary: #60a5fa;
+    --docs-primary-strong: #93c5fd;
+    --docs-primary-soft: rgba(96, 165, 250, 0.16);
+    --docs-accent: #38bdf8;
+    --docs-accent-soft: rgba(56, 189, 248, 0.14);
+    --docs-success: #4ade80;
+    --docs-shadow: 0 20px 42px rgba(2, 6, 23, 0.42);
+    --docs-shadow-soft: 0 10px 24px rgba(2, 6, 23, 0.28);
+    --docs-topbar-start: rgba(2, 6, 23, 0.97);
+    --docs-topbar-end: rgba(15, 23, 42, 0.94);
+    --docs-topbar-border: rgba(148, 163, 184, 0.14);
+    --docs-topbar-text: #f8fafc;
+    --docs-topbar-muted: rgba(226, 232, 240, 0.72);
+    --docs-topbar-pill: rgba(255, 255, 255, 0.05);
+    --docs-topbar-pill-border: rgba(148, 163, 184, 0.14);
+    --docs-hero-start: rgba(2, 6, 23, 0.97);
+    --docs-hero-end: rgba(15, 23, 42, 0.92);
+    --docs-hero-border: rgba(148, 163, 184, 0.14);
+    --docs-hero-text: #f8fafc;
+    --docs-hero-muted: rgba(226, 232, 240, 0.8);
+    --docs-code-bg: #020617;
+    --docs-code-text: #e2e8f0;
+    --docs-table-bg: rgba(15, 23, 42, 0.72);
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#app {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  font-family:
+    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background-color: var(--docs-bg);
+  background-image:
+    linear-gradient(var(--docs-bg-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--docs-bg-grid) 1px, transparent 1px),
+    radial-gradient(circle at top right, var(--docs-bg-glow-1), transparent 28%),
+    radial-gradient(circle at left bottom, var(--docs-bg-glow-2), transparent 24%);
+  background-size: 32px 32px, 32px 32px, auto, auto;
+  background-attachment: fixed;
+  color: var(--docs-text);
+}
+
+a {
+  color: inherit;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+button {
+  appearance: none;
+}
+
+input:focus,
+button:focus-visible,
+a:focus-visible {
+  outline: 2px solid rgba(37, 99, 235, 0.3);
+  outline-offset: 2px;
+}
+
+#app {
+  width: 100%;
+}
