@@ -58,33 +58,100 @@ jobs:
               .reverse()
               .join('\n');
 
-            // Generate AI title (skip if PR already exists)
-            const commitMessages = comparison.commits.map(c => c.commit.message.split('\n')[0]).join('\n');
+            const commitSubjects = comparison.commits.map(c => c.commit.message.split('\n')[0]);
+            const commitMessages = commitSubjects.slice(-20).join('\n');
             const titleTimeoutMs = Number(process.env.AI_TITLE_TIMEOUT_MS || 120000);
             const baseUrl = (process.env.OPENAI_BASE_URL || 'https://api.openai.com').replace(/\/$/, '');
-            let aiTitle = '';
-            if (process.env.OPENAI_API_KEY && process.env.OPENAI_MODEL) {
+            const truncateForLog = (value, maxLength = 400) => {
+              const text = String(value ?? '');
+              return text.length > maxLength
+                ? `${text.slice(0, maxLength)}… [truncated ${text.length - maxLength} chars]`
+                : text;
+            };
+            const parseAiPayload = (raw) => {
+              const text = String(raw || '').trim();
+              if (!text) {
+                throw new Error('Empty AI response body');
+              }
+
               try {
+                return JSON.parse(text);
+              } catch {
+                const ssePayloads = text
+                  .split(/\r?\n/)
+                  .map(line => line.trim())
+                  .filter(line => line.startsWith('data:'))
+                  .map(line => line.slice(5).trim())
+                  .filter(line => line && line !== '[DONE]');
+
+                for (let index = ssePayloads.length - 1; index >= 0; index -= 1) {
+                  try {
+                    return JSON.parse(ssePayloads[index]);
+                  } catch {
+                    // Continue until a valid JSON payload is found.
+                  }
+                }
+
+                throw new Error(`AI response was not valid JSON: ${text.slice(0, 500)}`);
+              }
+            };
+            const extractAiTitle = (payload) => {
+              const choiceContent = payload?.choices?.[0]?.message?.content;
+              if (typeof choiceContent === 'string') {
+                return choiceContent;
+              }
+
+              if (Array.isArray(choiceContent)) {
+                return choiceContent
+                  .map(item => item?.text || item?.content || '')
+                  .join('');
+              }
+
+              if (typeof payload?.output_text === 'string') {
+                return payload.output_text;
+              }
+
+              const responseText = payload?.output
+                ?.flatMap(item => item?.content || [])
+                ?.map(item => item?.text || '')
+                ?.join('');
+
+              return typeof responseText === 'string' ? responseText : '';
+            };
+            let aiTitle = '';
+            if (!existingPr && process.env.OPENAI_API_KEY && process.env.OPENAI_MODEL) {
+              try {
+                const requestPayload = {
+                  model: process.env.OPENAI_MODEL,
+                  messages: [
+                    {
+                      role: 'system',
+                      content: 'You are a PR title generator. Given commit messages, generate a PR title following Conventional Commits format: "type(scope): description".\n\nTypes: feat, fix, docs, style, refactor, perf, test, chore, ci, build, revert\nScope: optional, e.g., frontend, backend, api, auth, ui\n\nReturn ONLY the title text, no quotes or explanation.',
+                    },
+                    {
+                      role: 'user',
+                      content: `Commits:\n${commitMessages}`,
+                    },
+                  ],
+                  temperature: 0.3,
+                  stream: false,
+                };
+                const requestPayloadForLog = {
+                  ...requestPayload,
+                  messages: requestPayload.messages.map(message => ({
+                    ...message,
+                    content: truncateForLog(message.content),
+                  })),
+                };
+                console.log('AI title request payload:', JSON.stringify(requestPayloadForLog, null, 2));
+
                 const aiResponse = await fetch(`${baseUrl}/v1/chat/completions`, {
                   method: 'POST',
                   headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
                   },
-                  body: JSON.stringify({
-                    model: process.env.OPENAI_MODEL,
-                    messages: [
-                      {
-                        role: 'system',
-                        content: 'You are a PR title generator. Given commit messages, generate a PR title following Conventional Commits format: "type(scope): description".\n\nTypes: feat, fix, docs, style, refactor, perf, test, chore, ci, build, revert\nScope: optional, e.g., frontend, backend, api, auth, ui\n\nReturn ONLY the title text, no quotes or explanation.',
-                      },
-                      {
-                        role: 'user',
-                        content: `Commits:\n${commitMessages}`,
-                      },
-                    ],
-                    temperature: 0.3,
-                  }),
+                  body: JSON.stringify(requestPayload),
                   signal: AbortSignal.timeout(titleTimeoutMs),
                 });
 
@@ -93,8 +160,8 @@ jobs:
                   throw new Error(`API request failed: ${aiResponse.status} ${aiResponse.statusText} - ${raw.slice(0, 500)}`);
                 }
 
-                const json = JSON.parse(raw);
-                aiTitle = String(json.choices?.[0]?.message?.content || '').trim();
+                const json = parseAiPayload(raw);
+                aiTitle = String(extractAiTitle(json) || '').trim();
                 aiTitle = aiTitle.replace(/^['"`]+|['"`]+$/g, '').trim();
 
                 if (!aiTitle) {
@@ -103,13 +170,15 @@ jobs:
               } catch (error) {
                 console.log('Failed to generate AI title:', error.message);
               }
+            } else if (existingPr) {
+              console.log(`Skipping AI title generation because PR #${existingPr.number} already exists.`);
             } else {
               console.log('Skipping AI title generation because OPENAI_API_KEY or OPENAI_MODEL is missing.');
             }
 
             const date = new Date(Date.now() + 8 * 60 * 60 * 1000).toISOString().slice(0, 19).replace('T', ' ');
             const fallbackTitle = `[Frontend] Merge dev → master (${date} UTC+8)`;
-            const title = aiTitle || existingPr?.title || fallbackTitle;
+            const title = existingPr?.title || aiTitle || fallbackTitle;
 
             const body = [
               '## Frontend Changes',

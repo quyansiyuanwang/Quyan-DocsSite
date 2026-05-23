@@ -5,7 +5,7 @@
         <div class="brand-mark">Q</div>
         <div>
           <div class="brand-name">QYSYW Docs</div>
-          <div class="brand-note">API-style bilingual docs</div>
+          <div class="brand-note">Structured product manual · 双语文档</div>
         </div>
       </div>
 
@@ -13,11 +13,7 @@
         <button class="command-pill" type="button" @click="focusSearch">
           Ctrl + K
         </button>
-        <a
-          class="top-link"
-          :href="appBaseUrl"
-          target="_blank"
-          rel="noreferrer"
+        <a class="top-link" :href="appBaseUrl" target="_blank" rel="noreferrer"
           >Main site</a
         >
         <a
@@ -33,13 +29,16 @@
 
     <div class="docs-shell">
       <aside class="sidebar-panel">
-        <div class="sidebar-section sidebar-hero">
-          <div class="sidebar-eyebrow">Documentation hub</div>
-          <h2>Search, skim, jump</h2>
-          <p>Use the same reference-first rhythm as an API docs portal.</p>
-        </div>
-
         <div class="sidebar-section sidebar-toolbar">
+          <div class="sidebar-headline">
+            <div class="sidebar-eyebrow">Documentation hub</div>
+            <h2>Search, skim, jump</h2>
+            <p>
+              Reference-first navigation with denser structure and clearer
+              hierarchy.
+            </p>
+          </div>
+
           <div class="locale-switch">
             <button
               v-for="option in localeOptions"
@@ -61,10 +60,26 @@
               @keydown.enter.prevent="openFirstMatch"
             />
           </label>
+
+          <div class="sidebar-stats">
+            <div class="stat-chip">
+              <span class="stat-label">{{ ui.pages }}</span>
+              <strong>{{ docsPages.length }}</strong>
+            </div>
+            <div class="stat-chip">
+              <span class="stat-label">{{ ui.toc }}</span>
+              <strong>{{ tocItems.length }}</strong>
+            </div>
+          </div>
         </div>
 
         <div class="sidebar-section sidebar-groups">
-          <div class="section-label">{{ ui.pages }}</div>
+          <div class="sidebar-groups-head">
+            <div class="section-label">{{ ui.pages }}</div>
+            <div class="sidebar-groups-meta">
+              {{ groupedPages.length }} groups
+            </div>
+          </div>
 
           <div
             v-for="group in groupedPages"
@@ -88,51 +103,64 @@
 
       <main class="content-panel">
         <section class="doc-hero">
-          <div class="doc-breadcrumbs">
-            <span>{{ currentPage.category[locale] }}</span>
-            <span>/</span>
-            <span>{{ currentPage.slug }}</span>
+          <div class="doc-hero-main">
+            <div class="doc-breadcrumbs">
+              <span>{{ currentPage.category[locale] }}</span>
+              <span>/</span>
+              <span>{{ currentPage.slug }}</span>
+            </div>
+
+            <div class="doc-meta-row">
+              <span class="doc-method">DOC</span>
+              <span class="doc-route">{{ docsRouteLabel }}</span>
+              <span class="doc-update"
+                >Updated {{ currentPage.updatedAt }}</span
+              >
+            </div>
+
+            <h1>{{ currentPage.title[locale] }}</h1>
+            <p class="doc-summary">{{ currentPage.summary[locale] }}</p>
+
+            <div class="doc-tags">
+              <span v-for="tag in currentPage.tags" :key="tag" class="doc-tag"
+                >#{{ tag }}</span
+              >
+            </div>
           </div>
 
-          <div class="doc-meta-row">
-            <span class="doc-method">DOC</span>
-            <span class="doc-route">{{ docsRouteLabel }}</span>
-            <span class="doc-update">Updated {{ currentPage.updatedAt }}</span>
-          </div>
-
-          <h1>{{ currentPage.title[locale] }}</h1>
-          <p class="doc-summary">{{ currentPage.summary[locale] }}</p>
-
-          <div class="doc-tags">
-            <span v-for="tag in currentPage.tags" :key="tag" class="doc-tag"
-              >#{{ tag }}</span
-            >
-          </div>
-
-          <div class="doc-actions">
-            <button
-              class="action-button"
-              type="button"
-              @click="copyCurrentPageUrl"
-            >
-              {{ ui.copyPage }}
-            </button>
-            <a
-              class="action-button ghost"
-              :href="swaggerDocsUrl"
-              target="_blank"
-              rel="noreferrer"
-            >
-              Swagger
-            </a>
-            <a
-              class="action-button ghost"
-              :href="appBaseUrl"
-              target="_blank"
-              rel="noreferrer"
-            >
-              App
-            </a>
+          <div class="doc-hero-side">
+            <div class="hero-side-card">
+              <div class="hero-side-label">Route</div>
+              <div class="hero-side-value">{{ currentPage.slug }}</div>
+            </div>
+            <div class="hero-side-card">
+              <div class="hero-side-label">Actions</div>
+              <div class="doc-actions">
+                <button
+                  class="action-button"
+                  type="button"
+                  @click="copyCurrentPageUrl"
+                >
+                  {{ ui.copyPage }}
+                </button>
+                <a
+                  class="action-button ghost"
+                  :href="swaggerDocsUrl"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Swagger
+                </a>
+                <a
+                  class="action-button ghost"
+                  :href="appBaseUrl"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  App
+                </a>
+              </div>
+            </div>
           </div>
         </section>
 
@@ -188,18 +216,12 @@
 
               <div class="toc-card">
                 <div class="toc-card-title">{{ ui.quickLinks }}</div>
-                <a
-                  :href="appBaseUrl"
-                  target="_blank"
-                  rel="noreferrer"
-                  >{{ appBaseUrlLabel }}</a
-                >
-                <a
-                  :href="swaggerDocsUrl"
-                  target="_blank"
-                  rel="noreferrer"
-                  >{{ swaggerDocsUrlLabel }}</a
-                >
+                <a :href="appBaseUrl" target="_blank" rel="noreferrer">{{
+                  appBaseUrlLabel
+                }}</a>
+                <a :href="swaggerDocsUrl" target="_blank" rel="noreferrer">{{
+                  swaggerDocsUrlLabel
+                }}</a>
               </div>
             </div>
           </aside>
@@ -227,10 +249,7 @@ import {
   type DocsLocale,
   type DocsSlug,
 } from "@/docs/catalog";
-import {
-  getGlossaryEntriesForText,
-  type GlossaryEntry,
-} from "@/docs/glossary";
+import { getGlossaryEntriesForText, type GlossaryEntry } from "@/docs/glossary";
 
 type TocItem = {
   id: string;
@@ -270,7 +289,8 @@ const currentSlug = computed<DocsSlug>(() => {
 });
 const currentPage = computed(() => getDocsPage(currentSlug.value));
 const docsRouteLabel = computed(
-  () => `${toUrlLabel(DOCS_BASE_URL)}/${locale.value}/${currentPage.value.slug}`,
+  () =>
+    `${toUrlLabel(DOCS_BASE_URL)}/${locale.value}/${currentPage.value.slug}`,
 );
 const appBaseUrlLabel = toUrlLabel(appBaseUrl);
 const swaggerDocsUrlLabel = toUrlLabel(swaggerDocsUrl);
@@ -509,8 +529,10 @@ const glossaryMarkdown = computed(() => {
   return `\n\n## ${ui.value.glossary}\n\n${ui.value.glossaryLead}\n\n${entries}`;
 });
 
-const pageMarkdown = computed(
-  () => interpolateDocsContent(`${currentPage.value.content[locale.value]}${glossaryMarkdown.value}`),
+const pageMarkdown = computed(() =>
+  interpolateDocsContent(
+    `${currentPage.value.content[locale.value]}${glossaryMarkdown.value}`,
+  ),
 );
 
 const renderedContent = computed(() =>
@@ -581,7 +603,7 @@ watch(
   min-height: 100vh;
   max-width: var(--docs-max-width);
   margin: 0 auto;
-  padding: 24px;
+  padding: 20px;
 }
 
 .docs-topbar {
@@ -589,10 +611,10 @@ watch(
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  margin-bottom: 20px;
-  padding: 18px 24px;
+  margin-bottom: 16px;
+  padding: 14px 18px;
   border: 1px solid var(--docs-topbar-border);
-  border-radius: 20px;
+  border-radius: 12px;
   background: linear-gradient(
     180deg,
     var(--docs-topbar-start),
@@ -600,6 +622,10 @@ watch(
   );
   color: var(--docs-topbar-text);
   box-shadow: var(--docs-shadow);
+  position: sticky;
+  top: 12px;
+  z-index: 20;
+  backdrop-filter: blur(14px);
 }
 
 .brand-block {
@@ -611,24 +637,27 @@ watch(
 .brand-mark {
   display: grid;
   place-items: center;
-  width: 42px;
-  height: 42px;
-  border-radius: 12px;
-  background: linear-gradient(135deg, #7dd3fc, #2563eb 60%, #1d4ed8);
-  color: #05111f;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #1677ff, #0f5fe0 68%, #0a46a6);
+  color: #f8fbff;
   font-weight: 900;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    0 8px 18px rgba(22, 119, 255, 0.2);
 }
 
 .brand-name {
-  font-size: 18px;
+  font-size: 17px;
   font-weight: 800;
+  letter-spacing: 0.01em;
 }
 
 .brand-note {
   margin-top: 2px;
   color: var(--docs-topbar-muted);
-  font-size: 13px;
+  font-size: 12px;
 }
 
 .topbar-actions {
@@ -644,16 +673,15 @@ watch(
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 38px;
-  padding: 0 14px;
-  border-radius: 999px;
+  min-height: 34px;
+  padding: 0 12px;
+  border-radius: 9px;
   border: 1px solid var(--docs-topbar-pill-border);
   background: var(--docs-topbar-pill);
   color: inherit;
   text-decoration: none;
   cursor: pointer;
   transition:
-    transform 0.18s ease,
     background-color 0.18s ease,
     border-color 0.18s ease,
     box-shadow 0.18s ease;
@@ -662,25 +690,26 @@ watch(
 .command-pill:hover,
 .top-link:hover,
 .action-button:hover {
-  transform: translateY(-1px);
+  border-color: var(--docs-border-strong);
+  box-shadow: var(--docs-shadow-soft);
 }
 
 .top-link.primary,
 .action-button {
   background: linear-gradient(
-    135deg,
-    var(--docs-primary-strong),
-    var(--docs-accent)
+    180deg,
+    var(--docs-primary),
+    var(--docs-primary-strong)
   );
   color: #fff;
   border-color: transparent;
-  box-shadow: 0 10px 24px rgba(37, 99, 235, 0.22);
+  box-shadow: 0 8px 18px rgba(22, 119, 255, 0.18);
 }
 
 .docs-shell {
   display: grid;
-  grid-template-columns: 300px minmax(0, 1fr);
-  gap: 20px;
+  grid-template-columns: 288px minmax(0, 1fr);
+  gap: 16px;
 }
 
 .sidebar-panel,
@@ -690,10 +719,10 @@ watch(
 
 .sidebar-panel {
   display: grid;
-  gap: 16px;
+  gap: 12px;
   align-self: start;
   position: sticky;
-  top: 24px;
+  top: 84px;
 }
 
 .sidebar-section,
@@ -702,26 +731,10 @@ watch(
 .article-panel,
 .toc-panel {
   border: 1px solid var(--docs-border);
-  border-radius: 18px;
+  border-radius: 12px;
   background: var(--docs-surface);
   box-shadow: var(--docs-shadow);
-  backdrop-filter: blur(10px);
-}
-
-.sidebar-hero {
-  padding: 18px;
-  background:
-    linear-gradient(
-      180deg,
-      var(--docs-surface-strong),
-      var(--docs-surface-soft)
-    ),
-    radial-gradient(
-      circle at top right,
-      var(--docs-accent-soft),
-      transparent 35%
-    ),
-    var(--docs-surface);
+  backdrop-filter: blur(12px);
 }
 
 .sidebar-eyebrow,
@@ -730,22 +743,29 @@ watch(
 .doc-meta-row,
 .toc-card-title,
 .search-label {
-  font-size: 12px;
-  letter-spacing: 0.08em;
+  font-size: 11px;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--docs-muted);
   font-weight: 700;
 }
 
-.sidebar-hero h2 {
-  margin: 10px 0 6px;
-  font-size: 24px;
+.sidebar-headline {
+  display: grid;
+  gap: 8px;
 }
 
-.sidebar-hero p {
+.sidebar-headline h2 {
+  margin: 0;
+  font-size: 22px;
+  line-height: 1.1;
+}
+
+.sidebar-headline p {
   margin: 0;
   color: var(--docs-muted);
-  line-height: 1.65;
+  line-height: 1.6;
+  font-size: 13px;
 }
 
 .sidebar-toolbar,
@@ -753,24 +773,62 @@ watch(
 .result-panel,
 .article-panel,
 .toc-panel {
-  padding: 20px;
+  padding: 16px;
 }
 
 .sidebar-groups {
-  max-height: calc(100vh - 260px);
+  max-height: calc(100vh - 224px);
   overflow-y: auto;
   overscroll-behavior: contain;
   scrollbar-gutter: stable;
 }
 
-.doc-hero {
-  padding: 16px 18px;
-  max-height: 360px;
-}
-
 .sidebar-toolbar {
   display: grid;
-  gap: 14px;
+  gap: 12px;
+}
+
+.sidebar-stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.stat-chip {
+  display: grid;
+  gap: 4px;
+  padding: 10px 12px;
+  border: 1px solid var(--docs-border);
+  border-radius: 10px;
+  background: linear-gradient(
+    180deg,
+    var(--docs-surface-strong),
+    var(--docs-surface-soft)
+  );
+}
+
+.stat-chip strong {
+  font-size: 18px;
+  color: var(--docs-text-strong);
+}
+
+.stat-label {
+  color: var(--docs-muted-soft);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.sidebar-groups-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.sidebar-groups-meta {
+  color: var(--docs-muted-soft);
+  font-size: 12px;
 }
 
 .locale-switch {
@@ -789,9 +847,9 @@ watch(
 }
 
 .locale-button {
-  min-height: 40px;
+  min-height: 36px;
   border-color: var(--docs-border);
-  border-radius: 12px;
+  border-radius: 9px;
   background: var(--docs-surface-strong);
   color: var(--docs-muted);
   transition:
@@ -803,20 +861,20 @@ watch(
 .locale-button.active {
   background: var(--docs-primary-soft);
   color: var(--docs-primary);
-  border-color: rgba(37, 99, 235, 0.28);
+  border-color: rgba(22, 119, 255, 0.28);
 }
 
 .search-box {
   display: grid;
-  gap: 8px;
+  gap: 6px;
 }
 
 .search-box input {
   width: 100%;
-  min-height: 48px;
-  padding: 0 16px;
+  min-height: 42px;
+  padding: 0 14px;
   border: 1px solid var(--docs-border);
-  border-radius: 14px;
+  border-radius: 10px;
   background: var(--docs-surface-soft);
   color: var(--docs-text);
   box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.03);
@@ -829,44 +887,41 @@ watch(
 
 .group-block {
   display: grid;
-  gap: 8px;
-  margin-top: 14px;
+  gap: 6px;
+  margin-top: 12px;
 }
 
 .group-title {
   color: var(--docs-muted-soft);
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
 }
 
 .page-item {
   display: grid;
-  gap: 5px;
+  gap: 4px;
   text-align: left;
-  padding: 13px 14px;
-  border-radius: 14px;
-  border-color: transparent;
-  background: transparent;
+  padding: 12px;
+  border-radius: 10px;
+  border-color: var(--docs-border);
+  background: var(--docs-surface-strong);
   transition:
     background-color 0.18s ease,
     border-color 0.18s ease,
-    transform 0.18s ease,
     box-shadow 0.18s ease;
 }
 
 .page-item:hover,
 .page-item.active {
-  border-color: rgba(37, 99, 235, 0.12);
+  border-color: rgba(22, 119, 255, 0.18);
   background: linear-gradient(
     180deg,
     var(--docs-surface-strong),
     var(--docs-surface-soft)
   );
   box-shadow: var(--docs-shadow-soft);
-}
-
-.page-item:hover {
-  transform: translateY(-1px);
 }
 
 .page-item.active {
@@ -876,45 +931,81 @@ watch(
 .page-item.active::before {
   content: "";
   position: absolute;
-  inset: 10px auto 10px 0;
+  inset: 8px auto 8px 0;
   width: 3px;
-  border-radius: 999px;
+  border-radius: 0 999px 999px 0;
   background: linear-gradient(180deg, var(--docs-primary), var(--docs-accent));
 }
 
 .page-item-title {
   font-weight: 800;
+  color: var(--docs-text-strong);
 }
 
 .page-item-summary,
 .doc-summary,
 .result-desc {
   color: var(--docs-muted-soft);
-  line-height: 1.7;
+  line-height: 1.6;
+  font-size: 13px;
 }
 
 .content-panel {
   display: grid;
-  gap: 16px;
+  gap: 14px;
   align-content: start;
 }
 
 .doc-hero {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 8px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 240px;
+  gap: 16px;
   background:
-    linear-gradient(135deg, var(--docs-hero-start), var(--docs-hero-end)),
-    radial-gradient(
-      circle at top right,
-      var(--docs-accent-soft),
-      transparent 35%
-    ),
+    linear-gradient(180deg, var(--docs-hero-start), var(--docs-hero-end)),
+    linear-gradient(90deg, var(--docs-accent-soft), transparent 30%),
     var(--docs-surface);
   color: var(--docs-hero-text);
   overflow: hidden;
-  padding: 12px 16px;
+  padding: 18px;
+}
+
+.doc-hero-main,
+.doc-hero-side {
+  min-width: 0;
+}
+
+.doc-hero-main {
+  display: grid;
+  gap: 10px;
+}
+
+.doc-hero-side {
+  display: grid;
+  gap: 10px;
+  align-content: start;
+}
+
+.hero-side-card {
+  display: grid;
+  gap: 8px;
+  padding: 12px;
+  border: 1px solid var(--docs-hero-border);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.hero-side-label {
+  color: var(--docs-muted-soft);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.hero-side-value {
+  color: var(--docs-text-strong);
+  font-size: 14px;
+  font-weight: 700;
+  word-break: break-word;
 }
 
 .doc-breadcrumbs,
@@ -934,32 +1025,33 @@ watch(
 .doc-update {
   display: inline-flex;
   align-items: center;
-  min-height: 28px;
-  padding: 0 10px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.08);
+  min-height: 26px;
+  padding: 0 9px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.06);
   color: var(--docs-hero-text);
   border: 1px solid var(--docs-hero-border);
   font-size: 11px;
 }
 
 .doc-method {
-  background: linear-gradient(135deg, var(--docs-success), #38bdf8);
-  color: #07121f;
+  background: linear-gradient(180deg, var(--docs-success), #12803c);
+  color: #f8fffb;
   font-weight: 900;
 }
 
 .doc-hero h1 {
   margin: 0;
-  font-size: clamp(22px, 2.8vw, 34px);
-  line-height: 1.06;
+  font-size: clamp(22px, 2.5vw, 32px);
+  line-height: 1.12;
+  letter-spacing: -0.02em;
 }
 
 .doc-summary {
   margin: 0;
   max-width: 70ch;
   font-size: 14px;
-  line-height: 1.5;
+  line-height: 1.65;
   color: var(--docs-hero-muted);
 }
 
@@ -973,20 +1065,18 @@ watch(
 .doc-tag {
   display: inline-flex;
   align-items: center;
-  min-height: 26px;
-  padding: 0 10px;
-  border-radius: 999px;
+  min-height: 24px;
+  padding: 0 8px;
+  border-radius: 8px;
   border: 1px solid rgba(148, 163, 184, 0.18);
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.06);
   color: var(--docs-hero-text);
-  font-size: 12px;
+  font-size: 11px;
 }
 
 .doc-actions {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  margin-top: 0;
+  display: grid;
+  gap: 8px;
 }
 
 .action-button.ghost {
@@ -998,7 +1088,7 @@ watch(
 
 .result-panel {
   display: grid;
-  gap: 14px;
+  gap: 12px;
 }
 
 .panel-header {
@@ -1010,19 +1100,19 @@ watch(
 
 .panel-header h3 {
   margin: 6px 0 0;
-  font-size: 22px;
+  font-size: 20px;
 }
 
 .result-list {
   display: grid;
-  gap: 10px;
+  gap: 8px;
 }
 
 .result-card {
   display: grid;
   gap: 6px;
-  padding: 14px 16px;
-  border-radius: 14px;
+  padding: 12px 14px;
+  border-radius: 10px;
   text-align: left;
   background: linear-gradient(
     180deg,
@@ -1031,14 +1121,12 @@ watch(
   );
   border-color: var(--docs-border);
   transition:
-    transform 0.18s ease,
     box-shadow 0.18s ease,
     border-color 0.18s ease;
 }
 
 .result-card:hover {
-  transform: translateY(-1px);
-  border-color: rgba(37, 99, 235, 0.18);
+  border-color: rgba(22, 119, 255, 0.18);
   box-shadow: var(--docs-shadow-soft);
 }
 
@@ -1056,13 +1144,13 @@ watch(
 
 .doc-layout {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 260px;
-  gap: 20px;
+  grid-template-columns: minmax(0, 1fr) 250px;
+  gap: 16px;
   align-items: start;
 }
 
 .article-panel {
-  padding: 28px 30px;
+  padding: 24px 26px;
 }
 
 .article-panel :deep(h1) {
@@ -1085,26 +1173,22 @@ watch(
 .article-panel :deep(.glossary-anchor:target + h3) {
   padding-left: 10px;
   border-left: 4px solid var(--docs-primary);
-  background: linear-gradient(
-    90deg,
-    rgba(37, 99, 235, 0.12),
-    transparent 78%
-  );
+  background: linear-gradient(90deg, rgba(37, 99, 235, 0.12), transparent 78%);
 }
 
 .article-panel :deep(h2) {
-  font-size: 22px;
+  font-size: 21px;
   padding-bottom: 10px;
   border-bottom: 1px solid var(--docs-border);
 }
 
 .article-panel :deep(h3) {
-  font-size: 18px;
+  font-size: 17px;
 }
 
 .article-panel :deep(p),
 .article-panel :deep(li) {
-  line-height: 1.85;
+  line-height: 1.8;
   color: var(--docs-text);
 }
 
@@ -1130,16 +1214,16 @@ watch(
 
 .article-panel :deep(code) {
   padding: 0.18rem 0.42rem;
-  border-radius: 8px;
+  border-radius: 6px;
   background: var(--docs-primary-soft);
   color: var(--docs-primary-strong);
 }
 
 .article-panel :deep(pre) {
   overflow: auto;
-  padding: 18px;
+  padding: 16px;
   border: 1px solid var(--docs-border);
-  border-radius: 16px;
+  border-radius: 10px;
   background: var(--docs-code-bg);
   color: var(--docs-code-text);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
@@ -1155,7 +1239,7 @@ watch(
   width: 100%;
   border-collapse: collapse;
   overflow: hidden;
-  border-radius: 14px;
+  border-radius: 10px;
   background: var(--docs-table-bg);
 }
 
@@ -1168,20 +1252,20 @@ watch(
 
 .toc-panel {
   position: sticky;
-  top: 24px;
+  top: 84px;
 }
 
 .toc-sticky {
   display: grid;
-  gap: 10px;
+  gap: 8px;
 }
 
 .toc-link {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 10px 12px;
-  border-radius: 12px;
+  padding: 9px 10px;
+  border-radius: 9px;
   text-align: left;
   color: var(--docs-text);
   text-decoration: none;
@@ -1197,8 +1281,8 @@ watch(
 
 .toc-bullet {
   flex: none;
-  width: 8px;
-  height: 8px;
+  width: 7px;
+  height: 7px;
   border-radius: 999px;
   background: var(--docs-primary);
 }
@@ -1213,7 +1297,7 @@ watch(
   display: grid;
   gap: 8px;
   margin-top: 8px;
-  padding-top: 14px;
+  padding-top: 12px;
   border-top: 1px solid var(--docs-border);
 }
 
@@ -1222,7 +1306,12 @@ watch(
   text-decoration: none;
 }
 
+.toc-card a:hover {
+  color: var(--docs-primary-strong);
+}
+
 @media (max-width: 1120px) {
+  .doc-hero,
   .docs-shell,
   .doc-layout {
     grid-template-columns: 1fr;
@@ -1237,6 +1326,10 @@ watch(
   .sidebar-groups {
     max-height: none;
     overflow: visible;
+  }
+
+  .doc-actions {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 
@@ -1259,11 +1352,19 @@ watch(
   .result-panel,
   .toc-panel,
   .sidebar-section {
-    border-radius: 18px;
+    border-radius: 12px;
   }
 
   .article-panel {
-    padding: 22px 18px;
+    padding: 20px 16px;
+  }
+
+  .doc-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar-stats {
+    grid-template-columns: 1fr;
   }
 }
 </style>
