@@ -15,14 +15,14 @@
         </button>
         <a
           class="top-link"
-          href="https://qysyw.cn"
+          :href="appBaseUrl"
           target="_blank"
           rel="noreferrer"
           >Main site</a
         >
         <a
           class="top-link primary"
-          href="https://api.qysyw.cn/docs"
+          :href="swaggerDocsUrl"
           target="_blank"
           rel="noreferrer"
         >
@@ -96,9 +96,7 @@
 
           <div class="doc-meta-row">
             <span class="doc-method">DOC</span>
-            <span class="doc-route"
-              >docs.qysyw.cn/{{ locale }}/{{ currentPage.slug }}</span
-            >
+            <span class="doc-route">{{ docsRouteLabel }}</span>
             <span class="doc-update">Updated {{ currentPage.updatedAt }}</span>
           </div>
 
@@ -121,7 +119,7 @@
             </button>
             <a
               class="action-button ghost"
-              href="https://api.qysyw.cn/docs"
+              :href="swaggerDocsUrl"
               target="_blank"
               rel="noreferrer"
             >
@@ -129,7 +127,7 @@
             </a>
             <a
               class="action-button ghost"
-              href="https://qysyw.cn"
+              :href="appBaseUrl"
               target="_blank"
               rel="noreferrer"
             >
@@ -190,14 +188,17 @@
 
               <div class="toc-card">
                 <div class="toc-card-title">{{ ui.quickLinks }}</div>
-                <a href="https://qysyw.cn" target="_blank" rel="noreferrer"
-                  >qysyw.cn</a
-                >
                 <a
-                  href="https://api.qysyw.cn/docs"
+                  :href="appBaseUrl"
                   target="_blank"
                   rel="noreferrer"
-                  >api.qysyw.cn/docs</a
+                  >{{ appBaseUrlLabel }}</a
+                >
+                <a
+                  :href="swaggerDocsUrl"
+                  target="_blank"
+                  rel="noreferrer"
+                  >{{ swaggerDocsUrlLabel }}</a
                 >
               </div>
             </div>
@@ -213,6 +214,12 @@ import { computed, nextTick, ref, watch } from "vue";
 import { marked } from "marked";
 import { useRoute, useRouter } from "vue-router";
 import {
+  APP_BASE_URL,
+  DOCS_BASE_URL,
+  SWAGGER_DOCS_URL,
+  interpolateDocsContent,
+} from "@/config/site";
+import {
   defaultDocsSlug,
   docsPages,
   getDocsPage,
@@ -220,6 +227,10 @@ import {
   type DocsLocale,
   type DocsSlug,
 } from "@/docs/catalog";
+import {
+  getGlossaryEntriesForText,
+  type GlossaryEntry,
+} from "@/docs/glossary";
 
 type TocItem = {
   id: string;
@@ -227,10 +238,26 @@ type TocItem = {
   level: 2 | 3;
 };
 
+type GlossaryAliasMatch = {
+  alias: string;
+  entryId: string;
+};
+
 const route = useRoute();
 const router = useRouter();
 const query = ref("");
 const searchInputRef = ref<HTMLInputElement | null>(null);
+const appBaseUrl = APP_BASE_URL;
+const swaggerDocsUrl = SWAGGER_DOCS_URL;
+
+const toUrlLabel = (value: string) => {
+  try {
+    const url = new URL(value);
+    return `${url.host}${url.pathname === "/" ? "" : url.pathname}`;
+  } catch {
+    return value;
+  }
+};
 
 const locale = computed<DocsLocale>(() =>
   normalizeDocsLocale(route.params.locale as string | undefined),
@@ -242,6 +269,11 @@ const currentSlug = computed<DocsSlug>(() => {
   ) as DocsSlug;
 });
 const currentPage = computed(() => getDocsPage(currentSlug.value));
+const docsRouteLabel = computed(
+  () => `${toUrlLabel(DOCS_BASE_URL)}/${locale.value}/${currentPage.value.slug}`,
+);
+const appBaseUrlLabel = toUrlLabel(appBaseUrl);
+const swaggerDocsUrlLabel = toUrlLabel(swaggerDocsUrl);
 
 const localeOptions = [
   { value: "zh-CN" as const, label: "中文" },
@@ -260,6 +292,13 @@ const ui = computed(() => ({
   toc: locale.value === "en" ? "On this page" : "本页目录",
   quickLinks: locale.value === "en" ? "Quick links" : "快捷链接",
   copyPage: locale.value === "en" ? "Copy page link" : "复制页面链接",
+  glossary: locale.value === "en" ? "Glossary appendix" : "术语附录",
+  glossaryLead:
+    locale.value === "en"
+      ? "The terms below explain technical words that appear on this page."
+      : "以下术语用于解释本页中出现的专业词汇。",
+  jumpToGlossary:
+    locale.value === "en" ? "Jump to glossary explanation" : "跳转到术语解释",
 }));
 
 const groupedPages = computed(() => {
@@ -308,8 +347,13 @@ const slugify = (value: string) =>
     .trim()
     .replace(/\s+/g, "-");
 
-const renderMarkdownWithAnchors = (markdown: string) => {
-  const html = String(marked.parse(markdown));
+const glossaryAnchorId = (entryId: string) => `glossary-${entryId}`;
+const asciiAliasPattern = /^[a-z0-9][a-z0-9 +./:-]*$/i;
+
+const escapeRegExp = (value: string) =>
+  value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+const setHeadingAnchors = (html: string) => {
   return html.replace(/<h([23])>(.*?)<\/h\1>/g, (_match, level, rawText) => {
     const text = String(rawText).replace(/<[^>]+>/g, "");
     const id = slugify(text);
@@ -317,12 +361,167 @@ const renderMarkdownWithAnchors = (markdown: string) => {
   });
 };
 
+const buildGlossaryMatcher = (entries: GlossaryEntry[]) => {
+  const aliases = entries
+    .flatMap((entry) =>
+      entry.aliases.map((alias) => ({ alias, entryId: entry.id })),
+    )
+    .sort((left, right) => right.alias.length - left.alias.length);
+
+  const aliasMap = new Map<string, GlossaryAliasMatch>(
+    aliases.map((item) => [item.alias.toLowerCase(), item]),
+  );
+
+  const pattern = aliases
+    .map(({ alias }) => {
+      const escapedAlias = escapeRegExp(alias);
+      return asciiAliasPattern.test(alias)
+        ? `\\b${escapedAlias}\\b`
+        : escapedAlias;
+    })
+    .join("|");
+
+  return {
+    aliasMap,
+    regex: pattern ? new RegExp(pattern, "gi") : null,
+  };
+};
+
+const linkGlossaryTerms = (html: string, entries: GlossaryEntry[]) => {
+  if (typeof window === "undefined" || !entries.length) {
+    return html;
+  }
+
+  const { aliasMap, regex } = buildGlossaryMatcher(entries);
+  if (!regex) {
+    return html;
+  }
+
+  const container = document.createElement("div");
+  container.innerHTML = html;
+
+  const walker = document.createTreeWalker(container, NodeFilter.SHOW_TEXT, {
+    acceptNode(node) {
+      const parentElement = node.parentElement;
+      if (!parentElement || !node.nodeValue?.trim()) {
+        return NodeFilter.FILTER_REJECT;
+      }
+
+      if (parentElement.closest("a, code, pre, h1, h2, h3, h4, h5, h6")) {
+        return NodeFilter.FILTER_REJECT;
+      }
+
+      return NodeFilter.FILTER_ACCEPT;
+    },
+  });
+
+  const textNodes: Text[] = [];
+  let currentNode = walker.nextNode();
+  while (currentNode) {
+    textNodes.push(currentNode as Text);
+    currentNode = walker.nextNode();
+  }
+
+  for (const textNode of textNodes) {
+    const sourceText = textNode.nodeValue ?? "";
+    regex.lastIndex = 0;
+
+    if (!regex.test(sourceText)) {
+      continue;
+    }
+
+    regex.lastIndex = 0;
+    const fragment = document.createDocumentFragment();
+    let lastIndex = 0;
+
+    for (const match of sourceText.matchAll(regex)) {
+      const matchText = match[0];
+      const index = match.index ?? 0;
+      const mappedAlias = aliasMap.get(matchText.toLowerCase());
+
+      if (!mappedAlias) {
+        continue;
+      }
+
+      if (index > lastIndex) {
+        fragment.append(sourceText.slice(lastIndex, index));
+      }
+
+      const link = document.createElement("a");
+      link.href = `#${glossaryAnchorId(mappedAlias.entryId)}`;
+      link.className = "glossary-term-link";
+      link.title = ui.value.jumpToGlossary;
+      link.textContent = matchText;
+      fragment.append(link);
+
+      lastIndex = index + matchText.length;
+    }
+
+    if (lastIndex < sourceText.length) {
+      fragment.append(sourceText.slice(lastIndex));
+    }
+
+    textNode.parentNode?.replaceChild(fragment, textNode);
+  }
+
+  return container.innerHTML;
+};
+
+const renderMarkdownWithAnchors = (
+  markdown: string,
+  options?: {
+    linkGlossaryTerms?: boolean;
+    glossaryEntries?: GlossaryEntry[];
+  },
+) => {
+  const html = setHeadingAnchors(String(marked.parse(markdown)));
+
+  if (!options?.linkGlossaryTerms || !options.glossaryEntries?.length) {
+    return html;
+  }
+
+  return linkGlossaryTerms(html, options.glossaryEntries);
+};
+
+const currentGlossaryEntries = computed(() => {
+  const pageText = [
+    currentPage.value.title[locale.value],
+    currentPage.value.summary[locale.value],
+    currentPage.value.tags.join(" "),
+    currentPage.value.content[locale.value],
+  ].join("\n");
+
+  return [...getGlossaryEntriesForText(pageText)].sort((left, right) =>
+    left.title[locale.value].localeCompare(right.title[locale.value]),
+  );
+});
+
+const glossaryMarkdown = computed(() => {
+  if (!currentGlossaryEntries.value.length) return "";
+
+  const entries = currentGlossaryEntries.value
+    .map(
+      (entry) =>
+        `<a id="${glossaryAnchorId(entry.id)}" class="glossary-anchor"></a>\n### ${entry.title[locale.value]}\n\n${entry.description[locale.value]}`,
+    )
+    .join("\n\n");
+
+  return `\n\n## ${ui.value.glossary}\n\n${ui.value.glossaryLead}\n\n${entries}`;
+});
+
+const pageMarkdown = computed(
+  () => interpolateDocsContent(`${currentPage.value.content[locale.value]}${glossaryMarkdown.value}`),
+);
+
 const renderedContent = computed(() =>
-  renderMarkdownWithAnchors(currentPage.value.content[locale.value]),
+  renderMarkdownWithAnchors(pageMarkdown.value, {
+    linkGlossaryTerms: true,
+    glossaryEntries: currentGlossaryEntries.value,
+  }),
 );
 
 const tocItems = computed<TocItem[]>(() => {
-  const content = currentPage.value.content[locale.value];
+  const content = pageMarkdown.value;
   const items: TocItem[] = [];
 
   for (const line of content.split("\n")) {
@@ -555,6 +754,13 @@ watch(
 .article-panel,
 .toc-panel {
   padding: 20px;
+}
+
+.sidebar-groups {
+  max-height: calc(100vh - 260px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
 }
 
 .doc-hero {
@@ -869,6 +1075,23 @@ watch(
   scroll-margin-top: 24px;
 }
 
+.article-panel :deep(.glossary-anchor) {
+  display: block;
+  position: relative;
+  top: -24px;
+  visibility: hidden;
+}
+
+.article-panel :deep(.glossary-anchor:target + h3) {
+  padding-left: 10px;
+  border-left: 4px solid var(--docs-primary);
+  background: linear-gradient(
+    90deg,
+    rgba(37, 99, 235, 0.12),
+    transparent 78%
+  );
+}
+
 .article-panel :deep(h2) {
   font-size: 22px;
   padding-bottom: 10px;
@@ -883,6 +1106,17 @@ watch(
 .article-panel :deep(li) {
   line-height: 1.85;
   color: var(--docs-text);
+}
+
+.article-panel :deep(.glossary-term-link) {
+  color: var(--docs-primary-strong);
+  font-weight: 700;
+  text-decoration: underline dotted;
+  text-underline-offset: 0.18em;
+}
+
+.article-panel :deep(.glossary-term-link:hover) {
+  color: var(--docs-primary);
 }
 
 .article-panel :deep(p + p) {
@@ -998,6 +1232,11 @@ watch(
   .toc-panel {
     position: relative;
     top: 0;
+  }
+
+  .sidebar-groups {
+    max-height: none;
+    overflow: visible;
   }
 }
 

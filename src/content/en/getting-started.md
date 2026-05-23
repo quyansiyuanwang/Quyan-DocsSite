@@ -30,12 +30,12 @@ This is the public bilingual user manual for the site. The layout keeps the rhyt
 
 ## Quick links
 
-- App: https://qysyw.cn
-- API docs: https://api.qysyw.cn/docs
-- User manual: https://docs.qysyw.cn
+- App: {{APP_BASE_URL}}
+- API docs: {{SWAGGER_DOCS_URL}}
+- User manual: {{DOCS_BASE_URL}}
 
 ## Example route
 
 ```text
-https://docs.qysyw.cn/zh-CN/login-register
+{{DOCS_BASE_URL}}/zh-CN/login-register
 ```

@@ -30,12 +30,12 @@
 
 ## 快捷链接
 
-- 应用：https://qysyw.cn
-- API 文档：https://api.qysyw.cn/docs
-- 用户手册：https://docs.qysyw.cn
+- 应用：{{APP_BASE_URL}}
+- API 文档：{{SWAGGER_DOCS_URL}}
+- 用户手册：{{DOCS_BASE_URL}}
 
 ## 示例路由
 
 ```text
-https://docs.qysyw.cn/zh-CN/login-register
+{{DOCS_BASE_URL}}/zh-CN/login-register
 ```
