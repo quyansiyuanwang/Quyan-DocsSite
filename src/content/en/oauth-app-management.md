@@ -170,15 +170,15 @@ This table helps answer questions such as:
 
 ## Common scope meanings
 
-| Scope | Typical meaning | Risk note |
-| --- | --- | --- |
-| `profile` | Read basic profile data | Usually low-risk baseline access |
-| `email` | Read email-related information | Contains personal identity data |
-| `notification` | Access notification-related features | May affect notification flows |
-| `oauth_client` | Access OAuth client management capabilities | May approach app-level administration |
-| `accesskey` | Access access-key related features | May affect programmatic access, higher risk |
-| `passkey` | Access passkey-related features | Touches authentication management |
-| `two_factor` | Access two-factor related features | High-sensitivity security scope |
+| Scope          | Typical meaning                             | Risk note                                   |
+| -------------- | ------------------------------------------- | ------------------------------------------- |
+| `profile`      | Read basic profile data                     | Usually low-risk baseline access            |
+| `email`        | Read email-related information              | Contains personal identity data             |
+| `notification` | Access notification-related features        | May affect notification flows               |
+| `oauth_client` | Access OAuth client management capabilities | May approach app-level administration       |
+| `accesskey`    | Access access-key related features          | May affect programmatic access, higher risk |
+| `passkey`      | Access passkey-related features             | Touches authentication management           |
+| `two_factor`   | Access two-factor related features          | High-sensitivity security scope             |
 
 Scopes such as `email` and `two_factor` should usually be treated as more sensitive and granted with extra care.
 
@@ -302,35 +302,35 @@ curl -X GET "https://api.qysyw.cn/users/profile" \
 ## Minimal TypeScript demo
 
 ```ts
-const API_BASE_URL = 'https://api.qysyw.cn'
+const API_BASE_URL = "https://api.qysyw.cn";
 
 export function buildAuthorizeUrl() {
-  const url = new URL('/oauth/authorize', API_BASE_URL)
-  url.searchParams.set('response_type', 'code')
-  url.searchParams.set('client_id', 'oc_live_example123')
-  url.searchParams.set('redirect_uri', 'https://example.com/oauth/callback')
-  url.searchParams.set('scope', 'profile email')
-  url.searchParams.set('state', crypto.randomUUID())
-  url.searchParams.set('code_challenge', 'pkce-challenge')
-  url.searchParams.set('code_challenge_method', 'S256')
-  return url.toString()
+  const url = new URL("/oauth/authorize", API_BASE_URL);
+  url.searchParams.set("response_type", "code");
+  url.searchParams.set("client_id", "oc_live_example123");
+  url.searchParams.set("redirect_uri", "https://example.com/oauth/callback");
+  url.searchParams.set("scope", "profile email");
+  url.searchParams.set("state", crypto.randomUUID());
+  url.searchParams.set("code_challenge", "pkce-challenge");
+  url.searchParams.set("code_challenge_method", "S256");
+  return url.toString();
 }
 
 export async function exchangeToken(code: string, codeVerifier: string) {
   const response = await fetch(`${API_BASE_URL}/oauth/token`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      grant_type: 'authorization_code',
-      client_id: 'oc_live_example123',
-      client_secret: 'oc_secret_example456',
+      grant_type: "authorization_code",
+      client_id: "oc_live_example123",
+      client_secret: "oc_secret_example456",
       code,
-      redirect_uri: 'https://example.com/oauth/callback',
+      redirect_uri: "https://example.com/oauth/callback",
       code_verifier: codeVerifier,
     }),
-  })
+  });
 
-  return response.json()
+  return response.json();
 }
 ```
 
@@ -363,12 +363,12 @@ OAuth apps are no longer always “create and use immediately”. In many cases 
 
 ### Status meanings
 
-| Status | Meaning | Usable in the real OAuth flow |
-| --- | --- | --- |
-| `draft` | Draft, not submitted yet | No |
-| `pending` | Submitted and waiting for review | No |
-| `approved` | Review passed | Yes |
-| `rejected` | Rejected and must be revised | No |
+| Status     | Meaning                          | Usable in the real OAuth flow |
+| ---------- | -------------------------------- | ----------------------------- |
+| `draft`    | Draft, not submitted yet         | No                            |
+| `pending`  | Submitted and waiting for review | No                            |
+| `approved` | Review passed                    | Yes                           |
+| `rejected` | Rejected and must be revised     | No                            |
 
 ### Review-related notes
 

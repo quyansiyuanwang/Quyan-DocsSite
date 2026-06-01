@@ -160,7 +160,13 @@ const glossaryEntries: GlossaryEntry[] = [
   },
   {
     id: "redirect-uri",
-    aliases: ["redirect uri", "redirect-uri", "redirect url", "回调地址", "重定向地址"],
+    aliases: [
+      "redirect uri",
+      "redirect-uri",
+      "redirect url",
+      "回调地址",
+      "重定向地址",
+    ],
     title: { en: "Redirect URI", "zh-CN": "回调地址 / Redirect URI" },
     description: {
       en: "A redirect URI is the address the OAuth system sends the user back to after authorization is finished. You can think of it as the 'return address' for the login or authorization process.",
@@ -170,8 +176,18 @@ const glossaryEntries: GlossaryEntry[] = [
   },
   {
     id: "client-id-secret",
-    aliases: ["client id", "client-id", "client secret", "client-secret", "客户端 id", "客户端密钥"],
-    title: { en: "Client ID / client secret", "zh-CN": "客户端 ID / 客户端密钥" },
+    aliases: [
+      "client id",
+      "client-id",
+      "client secret",
+      "client-secret",
+      "客户端 id",
+      "客户端密钥",
+    ],
+    title: {
+      en: "Client ID / client secret",
+      "zh-CN": "客户端 ID / 客户端密钥",
+    },
     description: {
       en: "A client ID is the public identifier of an OAuth application, similar to an app number. A client secret is the private password of that application and must not be exposed on public pages or untrusted devices.",
       "zh-CN":
@@ -233,7 +249,8 @@ const glossaryEntries: GlossaryEntry[] = [
     title: { en: "JSON", "zh-CN": "JSON" },
     description: {
       en: "JSON is a lightweight text format for structured data. It looks like organized key-value text and is widely used when APIs send or receive data. You can think of it as a machine-friendly way to write a data form.",
-      "zh-CN": "JSON 是一种轻量级结构化文本格式，看起来像一组有条理的“键：值”数据。接口在传输数据时经常用它，你可以把它理解成一种机器更容易看懂的数据表单写法。",
+      "zh-CN":
+        "JSON 是一种轻量级结构化文本格式，看起来像一组有条理的“键：值”数据。接口在传输数据时经常用它，你可以把它理解成一种机器更容易看懂的数据表单写法。",
     },
   },
   {

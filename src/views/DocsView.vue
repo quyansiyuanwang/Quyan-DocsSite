@@ -895,7 +895,11 @@ onMounted(() => {
   border: 1px solid var(--docs-diagram-border);
   border-radius: 16px;
   background:
-    linear-gradient(180deg, var(--docs-diagram-bg), var(--docs-diagram-bg-soft)),
+    linear-gradient(
+      180deg,
+      var(--docs-diagram-bg),
+      var(--docs-diagram-bg-soft)
+    ),
     var(--docs-diagram-bg);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.7),

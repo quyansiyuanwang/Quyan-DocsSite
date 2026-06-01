@@ -156,18 +156,22 @@ app.get("/oauth/callback", async (req, res) => {
   });
 
   const tokenPayload = await tokenResponse.json();
-  const accessToken = tokenPayload?.data?.accessToken || tokenPayload?.access_token;
+  const accessToken =
+    tokenPayload?.data?.accessToken || tokenPayload?.access_token;
 
   if (!accessToken) {
     res.status(502).json({ error: "token_exchange_failed", tokenPayload });
     return;
   }
 
-  const profileResponse = await fetch(new URL("/api/user/profile", apiBaseUrl), {
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
+  const profileResponse = await fetch(
+    new URL("/api/user/profile", apiBaseUrl),
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
     },
-  });
+  );
 
   const profilePayload = await profileResponse.json();
 
@@ -340,7 +344,10 @@ function createPkcePair() {
 const { codeVerifier, codeChallenge, codeChallengeMethod } = createPkcePair();
 const state = crypto.randomUUID();
 
-const authorizeUrl = new URL("/oauth/authorize", process.env.APPSERVER_BASE_URL);
+const authorizeUrl = new URL(
+  "/oauth/authorize",
+  process.env.APPSERVER_BASE_URL,
+);
 authorizeUrl.searchParams.set("response_type", "code");
 authorizeUrl.searchParams.set("client_id", process.env.CLIENT_ID);
 authorizeUrl.searchParams.set("redirect_uri", process.env.REDIRECT_URI);
@@ -355,17 +362,20 @@ console.log(authorizeUrl.toString());
 // After the browser redirects back, paste the callback code here.
 const code = "paste_callback_code_here";
 
-const tokenResponse = await fetch(new URL("/oauth/token", process.env.APPSERVER_BASE_URL), {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({
-    grant_type: "authorization_code",
-    code,
-    client_id: process.env.CLIENT_ID,
-    redirect_uri: process.env.REDIRECT_URI,
-    code_verifier: codeVerifier,
-  }),
-});
+const tokenResponse = await fetch(
+  new URL("/oauth/token", process.env.APPSERVER_BASE_URL),
+  {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      grant_type: "authorization_code",
+      code,
+      client_id: process.env.CLIENT_ID,
+      redirect_uri: process.env.REDIRECT_URI,
+      code_verifier: codeVerifier,
+    }),
+  },
+);
 
 console.log(await tokenResponse.json());
 ```

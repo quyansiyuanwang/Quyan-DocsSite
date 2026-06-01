@@ -57,9 +57,9 @@ Most backend APIs follow a consistent wrapper:
 
 ```json
 {
-	"code": 0,
-	"message": "Success",
-	"data": {}
+  "code": 0,
+  "message": "Success",
+  "data": {}
 }
 ```
 
@@ -74,27 +74,27 @@ Recommended interpretation:
 
 ```ts
 export interface ApiResponse<T> {
-	code: number
-	message: string
-	data?: T
+  code: number;
+  message: string;
+  data?: T;
 }
 
 export function unwrapApi<T>(response: ApiResponse<T>): T {
-	if (response.code !== 0) {
-		throw new Error(response.message || `API failed: ${response.code}`)
-	}
-	return response.data as T
+  if (response.code !== 0) {
+    throw new Error(response.message || `API failed: ${response.code}`);
+  }
+  return response.data as T;
 }
 ```
 
 ## Choosing an authentication method
 
-| Scenario | Recommended method | Notes |
-| --- | --- | --- |
-| Logged-in browser user | JWT | Best for first-party user actions |
-| Third-party delegated access | OAuth 2.0 | Best for open-platform integrations |
-| Backend script / cron / server app | Access Key | Best for non-interactive programmatic access |
-| Gateway / relay forwarding | Relay Token | Best for proxy and relay topologies |
+| Scenario                           | Recommended method | Notes                                        |
+| ---------------------------------- | ------------------ | -------------------------------------------- |
+| Logged-in browser user             | JWT                | Best for first-party user actions            |
+| Third-party delegated access       | OAuth 2.0          | Best for open-platform integrations          |
+| Backend script / cron / server app | Access Key         | Best for non-interactive programmatic access |
+| Gateway / relay forwarding         | Relay Token        | Best for proxy and relay topologies          |
 
 If this page is intended for external integrators, each authentication mode should ideally include at least one curl sample and one SDK example.
 
@@ -133,30 +133,33 @@ For browser and Node.js users, a lightweight SDK layer is usually more useful th
 ### 1. Generic request helper
 
 ```ts
-type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE'
+type HttpMethod = "GET" | "POST" | "PUT" | "DELETE";
 
 interface RequestOptions {
-	method?: HttpMethod
-	token?: string
-	body?: unknown
+  method?: HttpMethod;
+  token?: string;
+  body?: unknown;
 }
 
-const API_BASE_URL = 'https://api.qysyw.cn'
+const API_BASE_URL = "https://api.qysyw.cn";
 
-export async function apiRequest<T>(path: string, options: RequestOptions = {}): Promise<T> {
-	const response = await fetch(`${API_BASE_URL}${path}`, {
-		method: options.method ?? 'GET',
-		headers: {
-			'Content-Type': 'application/json',
-			...(options.token ? { Authorization: `Bearer ${options.token}` } : {}),
-		},
-		body: options.body ? JSON.stringify(options.body) : undefined,
-		credentials: 'include',
-	})
+export async function apiRequest<T>(
+  path: string,
+  options: RequestOptions = {},
+): Promise<T> {
+  const response = await fetch(`${API_BASE_URL}${path}`, {
+    method: options.method ?? "GET",
+    headers: {
+      "Content-Type": "application/json",
+      ...(options.token ? { Authorization: `Bearer ${options.token}` } : {}),
+    },
+    body: options.body ? JSON.stringify(options.body) : undefined,
+    credentials: "include",
+  });
 
-	const json = await response.json()
-	if (json.code !== 0) throw new Error(json.message || 'Request failed')
-	return json.data as T
+  const json = await response.json();
+  if (json.code !== 0) throw new Error(json.message || "Request failed");
+  return json.data as T;
 }
 ```
 
@@ -164,24 +167,27 @@ export async function apiRequest<T>(path: string, options: RequestOptions = {}):
 
 ```ts
 export interface OAuthReviewItem {
-	id: string
-	name: string
-	clientId: string
-	reviewStatus: 'draft' | 'pending' | 'approved' | 'rejected'
-	reviewComment?: string
+  id: string;
+  name: string;
+  clientId: string;
+  reviewStatus: "draft" | "pending" | "approved" | "rejected";
+  reviewComment?: string;
 }
 
 export interface OAuthReviewListResponse {
-	items: OAuthReviewItem[]
-	total: number
-	page: number
-	pageSize: number
+  items: OAuthReviewItem[];
+  total: number;
+  page: number;
+  pageSize: number;
 }
 
 export async function listOAuthAppsForReview(token: string) {
-	return apiRequest<OAuthReviewListResponse>('/oauth-clients/review?page=1&pageSize=20', {
-		token,
-	})
+  return apiRequest<OAuthReviewListResponse>(
+    "/oauth-clients/review?page=1&pageSize=20",
+    {
+      token,
+    },
+  );
 }
 ```
 
@@ -189,19 +195,19 @@ export async function listOAuthAppsForReview(token: string) {
 
 ```ts
 export async function reviewOAuthApp(
-	token: string,
-	id: string,
-	reviewStatus: 'approved' | 'rejected',
-	reviewComment?: string,
+  token: string,
+  id: string,
+  reviewStatus: "approved" | "rejected",
+  reviewComment?: string,
 ) {
-	return apiRequest(`/oauth-clients/${id}/review`, {
-		method: 'POST',
-		token,
-		body: {
-			reviewStatus,
-			reviewComment,
-		},
-	})
+  return apiRequest(`/oauth-clients/${id}/review`, {
+    method: "POST",
+    token,
+    body: {
+      reviewStatus,
+      reviewComment,
+    },
+  });
 }
 ```
 
@@ -274,8 +280,8 @@ The documentation should explicitly tell integrators that:
 Recommended usage:
 
 ```ts
-const page = 1
-const pageSize = 20
+const page = 1;
+const pageSize = 20;
 ```
 
 ## Error handling guidance
@@ -284,11 +290,11 @@ Documentation should not only show success cases. It should also show how failur
 
 ```ts
 try {
-	const data = await listOAuthAppsForReview(token)
-	console.log(data.items)
+  const data = await listOAuthAppsForReview(token);
+  console.log(data.items);
 } catch (error) {
-	console.error('Load failed:', error)
-	// Recommended: toast, retry, fallback message, telemetry
+  console.error("Load failed:", error);
+  // Recommended: toast, retry, fallback message, telemetry
 }
 ```
 

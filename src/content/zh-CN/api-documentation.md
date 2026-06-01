@@ -59,9 +59,9 @@ OpenAPI JSON: https://api.qysyw.cn/docs/openapi.json
 
 ```json
 {
-	"code": 0,
-	"message": "Success",
-	"data": {}
+  "code": 0,
+  "message": "Success",
+  "data": {}
 }
 ```
 
@@ -76,27 +76,27 @@ OpenAPI JSON: https://api.qysyw.cn/docs/openapi.json
 
 ```ts
 export interface ApiResponse<T> {
-	code: number
-	message: string
-	data?: T
+  code: number;
+  message: string;
+  data?: T;
 }
 
 export function unwrapApi<T>(response: ApiResponse<T>): T {
-	if (response.code !== 0) {
-		throw new Error(response.message || `API failed: ${response.code}`)
-	}
-	return response.data as T
+  if (response.code !== 0) {
+    throw new Error(response.message || `API failed: ${response.code}`);
+  }
+  return response.data as T;
 }
 ```
 
 ## 鉴权方式选择
 
-| 场景 | 推荐方式 | 说明 |
-| --- | --- | --- |
-| 浏览器登录态 | JWT | 适合站内用户操作 |
-| 第三方代用户访问 | OAuth 2.0 | 适合开放平台接入 |
-| 服务端脚本 / 定时任务 | Access Key | 适合无交互程序调用 |
-| 网关 / 代理转发 | Relay Token | 适合中继与统一出口 |
+| 场景                  | 推荐方式    | 说明               |
+| --------------------- | ----------- | ------------------ |
+| 浏览器登录态          | JWT         | 适合站内用户操作   |
+| 第三方代用户访问      | OAuth 2.0   | 适合开放平台接入   |
+| 服务端脚本 / 定时任务 | Access Key  | 适合无交互程序调用 |
+| 网关 / 代理转发       | Relay Token | 适合中继与统一出口 |
 
 如果你的目标是“给外部开发者一套真正可跑的接入说明”，建议每种鉴权都至少提供 1 段 curl 和 1 段 SDK 示例。
 
@@ -135,30 +135,33 @@ curl -G "https://api.qysyw.cn/oauth-clients/review" \
 ### 1. 通用请求器
 
 ```ts
-type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE'
+type HttpMethod = "GET" | "POST" | "PUT" | "DELETE";
 
 interface RequestOptions {
-	method?: HttpMethod
-	token?: string
-	body?: unknown
+  method?: HttpMethod;
+  token?: string;
+  body?: unknown;
 }
 
-const API_BASE_URL = 'https://api.qysyw.cn'
+const API_BASE_URL = "https://api.qysyw.cn";
 
-export async function apiRequest<T>(path: string, options: RequestOptions = {}): Promise<T> {
-	const response = await fetch(`${API_BASE_URL}${path}`, {
-		method: options.method ?? 'GET',
-		headers: {
-			'Content-Type': 'application/json',
-			...(options.token ? { Authorization: `Bearer ${options.token}` } : {}),
-		},
-		body: options.body ? JSON.stringify(options.body) : undefined,
-		credentials: 'include',
-	})
+export async function apiRequest<T>(
+  path: string,
+  options: RequestOptions = {},
+): Promise<T> {
+  const response = await fetch(`${API_BASE_URL}${path}`, {
+    method: options.method ?? "GET",
+    headers: {
+      "Content-Type": "application/json",
+      ...(options.token ? { Authorization: `Bearer ${options.token}` } : {}),
+    },
+    body: options.body ? JSON.stringify(options.body) : undefined,
+    credentials: "include",
+  });
 
-	const json = await response.json()
-	if (json.code !== 0) throw new Error(json.message || 'Request failed')
-	return json.data as T
+  const json = await response.json();
+  if (json.code !== 0) throw new Error(json.message || "Request failed");
+  return json.data as T;
 }
 ```
 
@@ -166,24 +169,27 @@ export async function apiRequest<T>(path: string, options: RequestOptions = {}):
 
 ```ts
 export interface OAuthReviewItem {
-	id: string
-	name: string
-	clientId: string
-	reviewStatus: 'draft' | 'pending' | 'approved' | 'rejected'
-	reviewComment?: string
+  id: string;
+  name: string;
+  clientId: string;
+  reviewStatus: "draft" | "pending" | "approved" | "rejected";
+  reviewComment?: string;
 }
 
 export interface OAuthReviewListResponse {
-	items: OAuthReviewItem[]
-	total: number
-	page: number
-	pageSize: number
+  items: OAuthReviewItem[];
+  total: number;
+  page: number;
+  pageSize: number;
 }
 
 export async function listOAuthAppsForReview(token: string) {
-	return apiRequest<OAuthReviewListResponse>('/oauth-clients/review?page=1&pageSize=20', {
-		token,
-	})
+  return apiRequest<OAuthReviewListResponse>(
+    "/oauth-clients/review?page=1&pageSize=20",
+    {
+      token,
+    },
+  );
 }
 ```
 
@@ -191,19 +197,19 @@ export async function listOAuthAppsForReview(token: string) {
 
 ```ts
 export async function reviewOAuthApp(
-	token: string,
-	id: string,
-	reviewStatus: 'approved' | 'rejected',
-	reviewComment?: string,
+  token: string,
+  id: string,
+  reviewStatus: "approved" | "rejected",
+  reviewComment?: string,
 ) {
-	return apiRequest(`/oauth-clients/${id}/review`, {
-		method: 'POST',
-		token,
-		body: {
-			reviewStatus,
-			reviewComment,
-		},
-	})
+  return apiRequest(`/oauth-clients/${id}/review`, {
+    method: "POST",
+    token,
+    body: {
+      reviewStatus,
+      reviewComment,
+    },
+  });
 }
 ```
 
@@ -276,8 +282,8 @@ curl -X POST "https://api.qysyw.cn/oauth/token" \
 推荐写法：
 
 ```ts
-const page = 1
-const pageSize = 20 // 不要盲目传超大值
+const page = 1;
+const pageSize = 20; // 不要盲目传超大值
 ```
 
 ## 错误处理建议
@@ -286,11 +292,11 @@ const pageSize = 20 // 不要盲目传超大值
 
 ```ts
 try {
-	const data = await listOAuthAppsForReview(token)
-	console.log(data.items)
+  const data = await listOAuthAppsForReview(token);
+  console.log(data.items);
 } catch (error) {
-	console.error('Load failed:', error)
-	// 建议这里做 toast、重试、降级提示、日志上报
+  console.error("Load failed:", error);
+  // 建议这里做 toast、重试、降级提示、日志上报
 }
 ```
 
