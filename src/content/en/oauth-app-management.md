@@ -258,6 +258,158 @@ GET /oauth/authorize
 Important parameters:
 
 - `response_type=code`: use the authorization code flow.
+- `client_id`: the client ID issued when the app is created on this page.
+- `redirect_uri`: must exactly match a registered redirect URI.
+- `scope`: a space-delimited scope list.
+- `state`: strongly recommended for CSRF protection.
+- `code_challenge` / `code_challenge_method`: PKCE is recommended, especially for public clients.
+
+### Step 2: Receive the redirect after user approval
+
+After the user grants access, the system redirects back to your callback, for example:
+
+```text
+https://example.com/oauth/callback?code=returned_code&state=csrf-token-123
+```
+
+At that point, your app should:
+
+1. Verify that `state` matches the value stored before redirecting.
+2. Send the `code` to your backend so the backend can exchange it for tokens.
+
+### Step 3: Exchange the code for an access token
+
+```bash
+curl -X POST "https://api.qysyw.cn/oauth/token" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "grant_type": "authorization_code",
+    "client_id": "oc_live_example123",
+    "client_secret": "oc_secret_example456",
+    "code": "returned_code",
+    "redirect_uri": "https://example.com/oauth/callback",
+    "code_verifier": "pkce-verifier"
+  }'
+```
+
+### Step 4: Call business APIs with the access token
+
+```bash
+curl -X GET "https://api.qysyw.cn/users/profile" \
+  -H "Authorization: Bearer <oauth_access_token>"
+```
+
+## Minimal TypeScript demo
+
+```ts
+const API_BASE_URL = 'https://api.qysyw.cn'
+
+export function buildAuthorizeUrl() {
+  const url = new URL('/oauth/authorize', API_BASE_URL)
+  url.searchParams.set('response_type', 'code')
+  url.searchParams.set('client_id', 'oc_live_example123')
+  url.searchParams.set('redirect_uri', 'https://example.com/oauth/callback')
+  url.searchParams.set('scope', 'profile email')
+  url.searchParams.set('state', crypto.randomUUID())
+  url.searchParams.set('code_challenge', 'pkce-challenge')
+  url.searchParams.set('code_challenge_method', 'S256')
+  return url.toString()
+}
+
+export async function exchangeToken(code: string, codeVerifier: string) {
+  const response = await fetch(`${API_BASE_URL}/oauth/token`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      grant_type: 'authorization_code',
+      client_id: 'oc_live_example123',
+      client_secret: 'oc_secret_example456',
+      code,
+      redirect_uri: 'https://example.com/oauth/callback',
+      code_verifier: codeVerifier,
+    }),
+  })
+
+  return response.json()
+}
+```
+
+## Python demo
+
+```python
+import requests
+
+payload = {
+    "grant_type": "authorization_code",
+    "client_id": "oc_live_example123",
+    "client_secret": "oc_secret_example456",
+    "code": "returned_code",
+    "redirect_uri": "https://example.com/oauth/callback",
+    "code_verifier": "pkce-verifier",
+}
+
+response = requests.post(
+    "https://api.qysyw.cn/oauth/token",
+    json=payload,
+    timeout=15,
+)
+response.raise_for_status()
+print(response.json())
+```
+
+## Review workflow notes
+
+OAuth apps are no longer always “create and use immediately”. In many cases they move through a review workflow. Both app owners and platform operators should understand this.
+
+### Status meanings
+
+| Status | Meaning | Usable in the real OAuth flow |
+| --- | --- | --- |
+| `draft` | Draft, not submitted yet | No |
+| `pending` | Submitted and waiting for review | No |
+| `approved` | Review passed | Yes |
+| `rejected` | Rejected and must be revised | No |
+
+### Review-related notes
+
+- The app can only be used in the actual authorization flow after it reaches `approved`.
+- After rejection, the owner should revise the app based on the review comment and resubmit it.
+- If an approved or rejected app is edited again, it will typically return to `draft` and wait for re-submission.
+- Review comments should be visible to both administrators and app owners so fixes can be made efficiently.
+
+## Redirect URI configuration guidance
+
+This section should be very explicit because it is one of the most common OAuth integration failure points.
+
+### Recommended practice
+
+- Register development, staging, and production URIs separately
+- Use complete and controlled HTTPS URLs
+- Match protocol, host, port, and path exactly
+- Remove obsolete callback URLs quickly
+
+### Common mistakes
+
+- Missing trailing slash
+- Wrong domain
+- Mixing test and production environments
+- Using a frontend page URL instead of the actual backend callback handler
+
+## Recommended next additions for the docs site
+
+To make the docs feel like a real documentation center instead of plain notes, consider adding:
+
+1. Authorization-page screenshots or flow diagrams
+2. A full PKCE example
+3. Refresh-token examples
+4. Scope reference tables with sensitivity notes
+5. Troubleshooting checklists for common OAuth errors
+
+## Related pages
+
+- `api-documentation`
+- `access-key-management`
+- `account-settings`
 - `client_id`: the client ID from the management page.
 - `redirect_uri`: must exactly match one registered redirect URI.
 - `scope`: scopes requested for this authorization, separated by spaces.

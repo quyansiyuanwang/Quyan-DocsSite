@@ -22,7 +22,7 @@
   --docs-success: #16a34a;
   --docs-shadow: 0 12px 32px rgba(15, 23, 42, 0.05);
   --docs-shadow-soft: 0 6px 18px rgba(15, 23, 42, 0.04);
-  --docs-max-width: 1480px;
+  --docs-max-width: 100%;
   --docs-topbar-start: rgba(255, 255, 255, 0.95);
   --docs-topbar-end: rgba(248, 250, 252, 0.95);
   --docs-topbar-border: rgba(148, 163, 184, 0.18);
@@ -38,6 +38,9 @@
   --docs-code-bg: #0b1220;
   --docs-code-text: #e2e8f0;
   --docs-table-bg: #ffffff;
+  --docs-diagram-bg: #ffffff;
+  --docs-diagram-bg-soft: #f8fbff;
+  --docs-diagram-border: rgba(59, 130, 246, 0.18);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -79,6 +82,9 @@
     --docs-code-bg: #020617;
     --docs-code-text: #e2e8f0;
     --docs-table-bg: rgba(15, 23, 42, 0.84);
+    --docs-diagram-bg: #f8fafc;
+    --docs-diagram-bg-soft: #eef4ff;
+    --docs-diagram-border: rgba(125, 176, 255, 0.34);
   }
 }
 

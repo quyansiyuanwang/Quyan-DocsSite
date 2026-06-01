@@ -258,6 +258,160 @@ GET /oauth/authorize
 
 关键参数说明：
 
+- `response_type=code`：使用授权码模式。
+- `client_id`：你在本页创建应用后拿到的客户端 ID。
+- `redirect_uri`：必须与已登记回调地址完全一致。
+- `scope`：空格分隔的权限范围列表。
+- `state`：强烈建议携带，用于防 CSRF。
+- `code_challenge` / `code_challenge_method`：推荐开启 PKCE，尤其是公开应用。
+
+### 第二步：用户同意授权后接收回调
+
+授权成功后，系统会把用户带回你的回调地址，例如：
+
+```text
+https://example.com/oauth/callback?code=returned_code&state=csrf-token-123
+```
+
+这时你要做两件事：
+
+1. 校验 `state` 是否与你发起授权时保存的一致。
+2. 把 `code` 发送给你的后端，由后端换取 token。
+
+### 第三步：后端换取 access token
+
+```bash
+curl -X POST "https://api.qysyw.cn/oauth/token" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "grant_type": "authorization_code",
+    "client_id": "oc_live_example123",
+    "client_secret": "oc_secret_example456",
+    "code": "returned_code",
+    "redirect_uri": "https://example.com/oauth/callback",
+    "code_verifier": "pkce-verifier"
+  }'
+```
+
+### 第四步：携带 access token 调业务接口
+
+```bash
+curl -X GET "https://api.qysyw.cn/users/profile" \
+  -H "Authorization: Bearer <oauth_access_token>"
+```
+
+## TypeScript 最小 Demo
+
+```ts
+const API_BASE_URL = 'https://api.qysyw.cn'
+
+export function buildAuthorizeUrl() {
+  const url = new URL('/oauth/authorize', API_BASE_URL)
+  url.searchParams.set('response_type', 'code')
+  url.searchParams.set('client_id', 'oc_live_example123')
+  url.searchParams.set('redirect_uri', 'https://example.com/oauth/callback')
+  url.searchParams.set('scope', 'profile email')
+  url.searchParams.set('state', crypto.randomUUID())
+  url.searchParams.set('code_challenge', 'pkce-challenge')
+  url.searchParams.set('code_challenge_method', 'S256')
+  return url.toString()
+}
+
+export async function exchangeToken(code: string, codeVerifier: string) {
+  const response = await fetch(`${API_BASE_URL}/oauth/token`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      grant_type: 'authorization_code',
+      client_id: 'oc_live_example123',
+      client_secret: 'oc_secret_example456',
+      code,
+      redirect_uri: 'https://example.com/oauth/callback',
+      code_verifier: codeVerifier,
+    }),
+  })
+
+  return response.json()
+}
+```
+
+## Python Demo
+
+```python
+import requests
+
+payload = {
+    "grant_type": "authorization_code",
+    "client_id": "oc_live_example123",
+    "client_secret": "oc_secret_example456",
+    "code": "returned_code",
+    "redirect_uri": "https://example.com/oauth/callback",
+    "code_verifier": "pkce-verifier",
+}
+
+response = requests.post(
+    "https://api.qysyw.cn/oauth/token",
+    json=payload,
+    timeout=15,
+)
+response.raise_for_status()
+print(response.json())
+```
+
+## 审核流转说明
+
+现在的 OAuth 应用通常不仅是“创建完就能用”，而是会经历审核状态流转。对接方和平台管理员都应了解这一点。
+
+### 状态含义
+
+| 状态 | 含义 | 可否用于正式 OAuth 流程 |
+| --- | --- | --- |
+| `draft` | 草稿，尚未提交审核 | 不可 |
+| `pending` | 已提交，等待审核 | 不可 |
+| `approved` | 已通过审核 | 可以 |
+| `rejected` | 被拒绝，需修改后重新提交 | 不可 |
+
+### 审核相关注意点
+
+- 应用只有在 `approved` 后才能被正式用于授权流程。
+- 被拒绝后，应用所有者应根据审核意见修改资料后重新提交。
+- 已通过或已拒绝的应用一旦再次编辑，通常会回到 `draft`，等待重新提交。
+- 管理员侧可以看到审核理由，应用所有者也应能看到审核意见，便于整改。
+
+## Redirect URI 配置建议
+
+建议把这一部分写得非常具体，因为这是 OAuth 接入最容易出问题的地方。
+
+### 推荐做法
+
+- 开发环境、测试环境、生产环境分开登记
+- 使用完整且可控的 HTTPS 地址
+- 精确到协议、域名、端口、路径
+- 下线旧地址后及时删除
+
+### 典型错误
+
+- 少了尾部 `/`
+- 域名写错
+- 测试环境和生产环境混用
+- 前端页面地址和后端回调处理地址不一致
+
+## 文档站建议补齐的内容
+
+为了让文档“像文档”，而不是“像备注”，建议后续继续补：
+
+1. OAuth 授权页截图或流程图
+2. 完整 PKCE 示例
+3. 刷新 token 示例
+4. Scope 对照表与敏感范围说明
+5. 错误码排查清单
+
+## 相关页面
+
+- `api-documentation`
+- `access-key-management`
+- `account-settings`
+
 - `response_type=code`：表示你要走授权码模式。
 - `client_id`：你在管理页创建应用后获得的客户端 ID。
 - `redirect_uri`：必须和管理页里登记的某一项完全一致。
