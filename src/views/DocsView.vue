@@ -285,7 +285,41 @@ const getMermaid = async () => {
       module.default.initialize({
         startOnLoad: false,
         securityLevel: "loose",
-        theme: "default",
+        theme: "base",
+        darkMode: false,
+        themeVariables: {
+          background: "#ffffff",
+          primaryColor: "#eff6ff",
+          primaryTextColor: "#0f172a",
+          primaryBorderColor: "#3b82f6",
+          secondaryColor: "#f8fafc",
+          secondaryTextColor: "#0f172a",
+          secondaryBorderColor: "#94a3b8",
+          tertiaryColor: "#eef4ff",
+          tertiaryTextColor: "#0f172a",
+          tertiaryBorderColor: "#60a5fa",
+          lineColor: "#334155",
+          textColor: "#0f172a",
+          mainBkg: "#eff6ff",
+          secondBkg: "#f8fafc",
+          tertiaryBkg: "#eef4ff",
+          actorBkg: "#eff6ff",
+          actorBorder: "#3b82f6",
+          actorTextColor: "#0f172a",
+          actorLineColor: "#64748b",
+          signalColor: "#334155",
+          signalTextColor: "#0f172a",
+          labelBoxBkgColor: "#dbeafe",
+          labelBoxBorderColor: "#60a5fa",
+          labelTextColor: "#0f172a",
+          loopTextColor: "#0f172a",
+          noteBkgColor: "#fff7d6",
+          noteBorderColor: "#f59e0b",
+          noteTextColor: "#0f172a",
+          activationBorderColor: "#64748b",
+          activationBkgColor: "#e2e8f0",
+          sequenceNumberColor: "#0f172a",
+        },
       });
 
       return module.default;
@@ -900,6 +934,34 @@ onMounted(() => {
 :deep(.mermaid-diagram-block svg .node polygon),
 :deep(.mermaid-diagram-block svg .node circle) {
   filter: saturate(1.02) contrast(1.02);
+}
+
+:deep(.mermaid-diagram-block svg .actor),
+:deep(.mermaid-diagram-block svg .actor-box),
+:deep(.mermaid-diagram-block svg .labelBox),
+:deep(.mermaid-diagram-block svg .label-container),
+:deep(.mermaid-diagram-block svg .loopText),
+:deep(.mermaid-diagram-block svg .loopText > tspan),
+:deep(.mermaid-diagram-block svg .note),
+:deep(.mermaid-diagram-block svg .note rect),
+:deep(.mermaid-diagram-block svg .activation0),
+:deep(.mermaid-diagram-block svg .activation1),
+:deep(.mermaid-diagram-block svg .activation2) {
+  fill: #eff6ff !important;
+  stroke: #60a5fa !important;
+}
+
+:deep(.mermaid-diagram-block svg .note),
+:deep(.mermaid-diagram-block svg .note rect) {
+  fill: #fff7d6 !important;
+  stroke: #f59e0b !important;
+}
+
+:deep(.mermaid-diagram-block svg .activation0),
+:deep(.mermaid-diagram-block svg .activation1),
+:deep(.mermaid-diagram-block svg .activation2) {
+  fill: #dbeafe !important;
+  stroke: #93c5fd !important;
 }
 
 :deep(.mermaid-diagram-block svg .messageLine0),
