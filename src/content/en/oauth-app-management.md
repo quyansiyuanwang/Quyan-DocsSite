@@ -231,6 +231,261 @@ If not, treat it as a public client.
 3. Copy the client secret immediately if one is issued.
 4. Rotate the secret if it may have been exposed.
 
+## How to actually call it
+
+If you are integrating for the first time, think of the flow as four steps:
+
+1. Create an OAuth app in the management page and get a `client_id`. Confidential clients also receive a `client_secret`.
+2. Redirect the user to `/oauth/authorize`.
+3. After approval, the system redirects back to a registered `redirect_uri` with a temporary `code`.
+4. Your backend exchanges that `code` at `/oauth/token` for an `access_token`.
+
+### Step 1: Build the authorization URL
+
+Example authorization request:
+
+```text
+GET /oauth/authorize
+  ?response_type=code
+  &client_id=oc_live_example123
+  &redirect_uri=https%3A%2F%2Fexample.com%2Foauth%2Fcallback
+  &scope=profile%20email
+  &state=csrf-token-123
+  &code_challenge=BASE64URL_ENCODED_CHALLENGE
+  &code_challenge_method=S256
+```
+
+Important parameters:
+
+- `response_type=code`: use the authorization code flow.
+- `client_id`: the client ID from the management page.
+- `redirect_uri`: must exactly match one registered redirect URI.
+- `scope`: scopes requested for this authorization, separated by spaces.
+- `state`: strongly recommended for CSRF protection and request correlation.
+- `code_challenge` and `code_challenge_method`: recommended with PKCE, especially for public clients.
+
+### Step 2: User approval
+
+When the user opens the authorization URL, the system shows:
+
+- the application name
+- the requested scopes
+- whether consent is required again
+- the redirect target that will receive the result
+
+If the user approves, the system redirects back, for example:
+
+```text
+https://example.com/oauth/callback?code=AUTH_CODE_123&state=csrf-token-123
+```
+
+At that point you should:
+
+- extract the `code`
+- verify that the returned `state` matches the value you stored before redirecting the user
+
+### Step 3: Exchange the code for a token
+
+Confidential clients usually do this from the backend:
+
+```bash
+curl -X POST "https://your-appserver.example.com/oauth/token" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "grant_type": "authorization_code",
+    "code": "AUTH_CODE_123",
+    "redirect_uri": "https://example.com/oauth/callback",
+    "client_id": "oc_live_example123",
+    "client_secret": "oc_secret_xxx",
+    "code_verifier": "original-pkce-verifier"
+  }'
+```
+
+Public clients usually omit `client_secret`, but should still use PKCE:
+
+```bash
+curl -X POST "https://your-appserver.example.com/oauth/token" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "grant_type": "authorization_code",
+    "code": "AUTH_CODE_123",
+    "redirect_uri": "myapp://oauth/callback",
+    "client_id": "oc_public_example123",
+    "code_verifier": "original-pkce-verifier"
+  }'
+```
+
+Typical response:
+
+```json
+{
+  "access_token": "access_token_here",
+  "token_type": "Bearer",
+  "expires_in": 3600,
+  "refresh_token": "refresh_token_here",
+  "scope": "profile email"
+}
+```
+
+### Step 4: Call APIs with the access token
+
+Once you have the token, send it in the `Authorization` header:
+
+```bash
+curl "https://your-appserver.example.com/api/some-protected-resource" \
+  -H "Authorization: Bearer access_token_here"
+```
+
+If the API requires a scope that your token does not have, the request still fails.
+
+In other words:
+
+- OAuth tokens answer “has the third-party app been authorized?”
+- internal permission and security checks answer “is this token allowed to do this specific action?”
+
+### Step 5: Refresh the access token after it expires
+
+If the token response includes a `refresh_token`, you can usually obtain a new access token after expiry without forcing the user through consent again every time.
+
+Example:
+
+```bash
+curl -X POST "https://your-appserver.example.com/oauth/token" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "grant_type": "refresh_token",
+    "refresh_token": "refresh_token_here",
+    "client_id": "oc_live_example123",
+    "client_secret": "oc_secret_xxx"
+  }'
+```
+
+Public clients usually omit `client_secret`:
+
+```bash
+curl -X POST "https://your-appserver.example.com/oauth/token" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "grant_type": "refresh_token",
+    "refresh_token": "refresh_token_here",
+    "client_id": "oc_public_example123"
+  }'
+```
+
+You can think of it like this:
+
+- `access_token`: a short-lived pass
+- `refresh_token`: a credential that can request a new pass when policy allows it
+
+If the refresh token is expired, revoked, or does not match the client, refresh will fail and you usually need to restart the authorization flow.
+
+### Step 6: Revoke tokens when they are no longer needed
+
+When a user disconnects an integration, removes an app, or you suspect token exposure, call the revoke endpoint proactively.
+
+Example:
+
+```bash
+curl -X POST "https://your-appserver.example.com/oauth/revoke" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "token": "refresh_token_here",
+    "client_id": "oc_live_example123",
+    "client_secret": "oc_secret_xxx",
+    "token_type_hint": "refresh_token"
+  }'
+```
+
+Public clients can omit `client_secret`:
+
+```bash
+curl -X POST "https://your-appserver.example.com/oauth/revoke" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "token": "access_token_here",
+    "client_id": "oc_public_example123",
+    "token_type_hint": "access_token"
+  }'
+```
+
+A successful response usually looks like this:
+
+```json
+{
+  "revoked": true
+}
+```
+
+Common times to revoke tokens:
+
+- the user clicks “disconnect” in your product
+- the user deletes the OAuth app or disables the integration
+- you suspect token or secret leakage
+- you want old tokens to stop working immediately
+
+## Full flow at a glance
+
+```mermaid
+sequenceDiagram
+  actor User
+  participant App as Third-Party App
+  participant Browser
+  participant Auth as AppServer /oauth/authorize
+  participant Token as AppServer /oauth/token
+  participant API as Protected API
+
+  App->>Browser: Redirect user to authorization URL
+  Browser->>Auth: GET /oauth/authorize?response_type=code&client_id=...&redirect_uri=...&scope=profile%20email&state=...&code_challenge=...
+  Auth-->>Browser: Show consent page
+  User->>Browser: Approve requested scopes
+  Browser->>Auth: POST /oauth/authorize approve=true
+  Auth-->>Browser: 302 redirect to registered redirect_uri with code and state
+  Browser-->>App: Return with authorization code
+  App->>Token: POST /oauth/token with code exchange payload
+  Token-->>App: access_token + refresh_token(optional)
+  App->>API: Call protected API with Authorization: Bearer <access_token>
+  API-->>App: Protected resource response
+```
+
+## Easy-to-miss integration details
+
+### 1. Redirect URI must match exactly
+
+It is not enough to be on the same domain. These parts must match exactly:
+
+- scheme
+- host
+- port
+- path
+- trailing slash
+
+### 2. Never ship a confidential client secret to the frontend
+
+If your app runs in a browser, mobile package, or desktop client distributed to users, do not treat `client_secret` as secret there.
+
+### 3. Always send state when possible
+
+This helps you confirm:
+
+- the flow was initiated by your app
+- the callback was not swapped or tampered with
+
+### 4. Public clients should use PKCE
+
+Even without a `client_secret`, use:
+
+- `code_challenge`
+- `code_challenge_method`
+- `code_verifier`
+
+### 5. A granted scope does not bypass internal security rules
+
+Sensitive capabilities may still be limited by:
+
+- account permissions
+- security validation
+- two-factor or high-risk protection policies
+
 ## Notes
 
 - Public clients do not use a client secret.
