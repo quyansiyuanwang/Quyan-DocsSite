@@ -6,6 +6,7 @@ import homeArticlesEn from "@/content/en/home-articles.md?raw";
 import chatEn from "@/content/en/chat.md?raw";
 import accountSettingsEn from "@/content/en/account-settings.md?raw";
 import accessKeyManagementEn from "@/content/en/access-key-management.md?raw";
+import oauthAppManagementEn from "@/content/en/oauth-app-management.md?raw";
 import notificationSettingsEn from "@/content/en/notification-settings.md?raw";
 import balanceHistoryEn from "@/content/en/balance-history.md?raw";
 import myMonthlyPassesEn from "@/content/en/my-monthly-passes.md?raw";
@@ -42,6 +43,7 @@ import homeArticlesZh from "@/content/zh-CN/home-articles.md?raw";
 import chatZh from "@/content/zh-CN/chat.md?raw";
 import accountSettingsZh from "@/content/zh-CN/account-settings.md?raw";
 import accessKeyManagementZh from "@/content/zh-CN/access-key-management.md?raw";
+import oauthAppManagementZh from "@/content/zh-CN/oauth-app-management.md?raw";
 import notificationSettingsZh from "@/content/zh-CN/notification-settings.md?raw";
 import balanceHistoryZh from "@/content/zh-CN/balance-history.md?raw";
 import myMonthlyPassesZh from "@/content/zh-CN/my-monthly-passes.md?raw";
@@ -212,6 +214,18 @@ export const docsPages = [
     ["access-key", "security", "key"],
     accessKeyManagementEn,
     accessKeyManagementZh,
+  ),
+  createDocsPage(
+    "oauth-app-management",
+    "Account",
+    "账号",
+    "OAuth app management",
+    "OAuth 应用管理",
+    "Register applications, manage redirect URIs, and rotate client secrets safely.",
+    "说明应用注册、回调地址管理，以及如何安全轮换客户端密钥。",
+    ["oauth", "application", "client"],
+    oauthAppManagementEn,
+    oauthAppManagementZh,
   ),
   createDocsPage(
     "notification-settings",
