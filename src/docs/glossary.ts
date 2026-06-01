@@ -9,13 +9,113 @@ export type GlossaryEntry = {
 
 const glossaryEntries: GlossaryEntry[] = [
   {
+    id: "variable",
+    aliases: ["variable", "变量"],
+    title: { en: "Variable", "zh-CN": "变量" },
+    description: {
+      en: "A variable is a named box used by a program to temporarily store a value. For example, a variable can store a username, a number, or a yes/no result so the program can use it later.",
+      "zh-CN":
+        "变量可以理解为程序里的一个“带名字的小盒子”，用来临时存放数据。比如它可以装用户名、数字，或者“是/否”这样的结果，方便程序后面继续使用。",
+    },
+  },
+  {
+    id: "parameter",
+    aliases: ["parameter", "param", "参数"],
+    title: { en: "Parameter", "zh-CN": "参数" },
+    description: {
+      en: "A parameter is an input value passed into a function, page, or API. You can think of it as the information you must provide so the system knows what you want it to do.",
+      "zh-CN":
+        "参数就是你传给函数、页面或接口的输入内容。可以把它理解成“你给系统的说明信息”，系统拿到这些信息后，才知道你想让它做什么。",
+    },
+  },
+  {
+    id: "field",
+    aliases: ["field", "字段"],
+    title: { en: "Field", "zh-CN": "字段" },
+    description: {
+      en: "A field is one individual piece of data inside a form, object, table row, or response. For example, username, email, and createdAt can each be separate fields.",
+      "zh-CN":
+        "字段就是一条数据里的某一个具体项目。比如在用户信息里，用户名、邮箱、创建时间都可以看成独立字段。",
+    },
+  },
+  {
+    id: "function",
+    aliases: ["function", "函数"],
+    title: { en: "Function", "zh-CN": "函数" },
+    description: {
+      en: "A function is a reusable block of logic. You give it input, it performs some work, and then it may return a result. It is similar to pressing a machine button that performs a fixed task.",
+      "zh-CN":
+        "函数可以理解为一段可重复使用的“处理步骤”。你给它输入，它按预先写好的规则做事，最后可能返回结果。它有点像机器上的一个功能按钮，按下去就执行固定动作。",
+    },
+  },
+  {
+    id: "request-response",
+    aliases: ["request", "response", "请求", "响应"],
+    title: { en: "Request / response", "zh-CN": "请求 / 响应" },
+    description: {
+      en: "A request is what your browser, app, or script sends out to ask for something. A response is what the server sends back. In simple terms: request means 'I want this', response means 'here is the result'.",
+      "zh-CN":
+        "请求是浏览器、程序或脚本发出去的“我想要这个”的动作；响应是服务器回回来的结果。最简单地说：请求是“提要求”，响应是“给结果”。",
+    },
+  },
+  {
+    id: "frontend-backend",
+    aliases: ["frontend", "backend", "前端", "后端"],
+    title: { en: "Frontend / backend", "zh-CN": "前端 / 后端" },
+    description: {
+      en: "Frontend is the part users directly see and click, such as pages, buttons, and forms. Backend is the hidden part on the server that stores data, checks permissions, and processes business logic.",
+      "zh-CN":
+        "前端是用户直接看到并操作的部分，比如页面、按钮、表单；后端是服务器上看不见的部分，负责存数据、校验权限、处理业务逻辑。",
+    },
+  },
+  {
+    id: "client-server",
+    aliases: ["client", "server", "客户端", "服务器"],
+    title: { en: "Client / server", "zh-CN": "客户端 / 服务器" },
+    description: {
+      en: "A client is the side that initiates an action, such as your browser, app, or script. A server is the side that receives the request, processes it, and returns data or a result.",
+      "zh-CN":
+        "客户端是主动发起操作的一方，比如你的浏览器、App 或脚本；服务器是接收请求、处理事情并返回结果的一方。",
+    },
+  },
+  {
+    id: "database",
+    aliases: ["database", "db", "数据库"],
+    title: { en: "Database", "zh-CN": "数据库" },
+    description: {
+      en: "A database is a system used to store and organize data for later lookup and update. You can think of it as a very large, structured storage cabinet that programs can search quickly.",
+      "zh-CN":
+        "数据库是专门用来保存和整理数据的系统，方便以后查询、修改和统计。可以把它理解成一个非常大、而且整理得很规整的电子资料柜。",
+    },
+  },
+  {
+    id: "browser",
+    aliases: ["browser", "浏览器"],
+    title: { en: "Browser", "zh-CN": "浏览器" },
+    description: {
+      en: "A browser is software used to open websites, such as Chrome, Edge, or Firefox. In many docs, actions like login, copy link, and open page are all done in the browser.",
+      "zh-CN":
+        "浏览器就是打开网页的软件，比如 Chrome、Edge、Firefox。文档里提到的登录、打开页面、复制链接等很多操作，通常都是在浏览器里完成的。",
+    },
+  },
+  {
+    id: "oauth",
+    aliases: ["oauth"],
+    title: { en: "OAuth", "zh-CN": "OAuth" },
+    description: {
+      en: "OAuth is a standard way to let one application obtain limited access to another account or service without directly giving away the user's password. For beginners, you can think of it as an 'authorized delegation' mechanism.",
+      "zh-CN":
+        "OAuth 是一种标准授权方式，允许一个应用在“不直接拿到用户密码”的前提下，获得对另一个账号或服务的部分访问权限。对新手来说，可以把它理解成“授权代办机制”。",
+    },
+  },
+  {
     id: "api",
     aliases: ["api", "接口"],
     title: { en: "API", "zh-CN": "API（接口）" },
     description: {
-      en: "API stands for Application Programming Interface. In this product, it usually means an address and rule set that lets another program send requests to the platform.",
+      en: "API stands for Application Programming Interface. If a normal web page is for people to click, an API is for programs to talk to programs. In this product, it usually means a request address plus a rule set that another program can use to read data, submit data, or trigger an action.",
       "zh-CN":
-        "API 是“应用程序编程接口”。在本产品里，通常指别的程序访问本平台时使用的接口地址与调用规则。",
+        "API 是“应用程序编程接口”。如果普通网页是给人点击的，那么 API 更像是“给程序使用的网页入口”。在本产品里，它通常指别的程序访问本平台时使用的接口地址和调用规则，可用于读数据、传数据或触发动作。",
     },
   },
   {
@@ -23,9 +123,9 @@ const glossaryEntries: GlossaryEntry[] = [
     aliases: ["openapi"],
     title: { en: "OpenAPI", "zh-CN": "OpenAPI" },
     description: {
-      en: "OpenAPI is a standard format for describing APIs. It helps tools generate interface docs, test requests, and code clients.",
+      en: "OpenAPI is a standard format for describing what an API can do, what parameters it accepts, and what results it returns. Tools can read this description and automatically generate docs, test pages, and client code.",
       "zh-CN":
-        "OpenAPI 是一种描述接口的标准格式，可用于生成接口文档、测试请求和客户端代码。",
+        "OpenAPI 是一种“用统一格式描述接口”的标准。它会写清楚接口能做什么、接收什么参数、返回什么结果。工具读懂这份说明后，就能自动生成接口文档、测试页面和客户端代码。",
     },
   },
   {
@@ -33,9 +133,9 @@ const glossaryEntries: GlossaryEntry[] = [
     aliases: ["swagger"],
     title: { en: "Swagger", "zh-CN": "Swagger" },
     description: {
-      en: "Swagger is a common interface-document viewer. In this site it refers to the API docs page used to inspect and test endpoints.",
+      en: "Swagger is a common tool for viewing and testing APIs in a web page. In this site it usually means the API documentation page where you can see endpoint details, fill in parameters, and try requests directly.",
       "zh-CN":
-        "Swagger 是常见的接口文档查看工具。在本站里通常指用于查看和测试接口的 API 文档页。",
+        "Swagger 是一种常见的接口文档和调试工具。在本站里，它通常就是那个可以查看接口详情、填写参数并直接测试请求的 API 文档页面。",
     },
   },
   {
@@ -43,9 +143,39 @@ const glossaryEntries: GlossaryEntry[] = [
     aliases: ["endpoint", "端点"],
     title: { en: "Endpoint", "zh-CN": "端点" },
     description: {
-      en: "An endpoint is a specific request address or function entry of an API, such as a URL used for reading data or submitting data.",
+      en: "An endpoint is one specific API entry point. You can think of it as one exact service window: one endpoint may be for reading a list, another for creating a record, and another for deleting something.",
       "zh-CN":
-        "端点指 API 中某个具体的请求地址或功能入口，例如读取数据或提交数据的 URL。",
+        "端点就是 API 里的某一个具体功能入口。可以把它理解成一个明确的“服务窗口”：有的窗口负责查数据，有的负责新建，有的负责删除。",
+    },
+  },
+  {
+    id: "scope",
+    aliases: ["scope", "scopes", "权限范围", "作用域"],
+    title: { en: "Scope", "zh-CN": "Scope（权限范围）" },
+    description: {
+      en: "In OAuth and authorization docs, a scope means a named permission range. It defines exactly what an app is allowed to do after authorization, such as reading profile data or managing tokens.",
+      "zh-CN":
+        "在 OAuth 和授权文档里，scope 通常指“权限范围”。它用来明确说明：某个应用在授权后到底能做哪些事，比如读取资料、管理令牌，或者调用某类接口。",
+    },
+  },
+  {
+    id: "redirect-uri",
+    aliases: ["redirect uri", "redirect-uri", "redirect url", "回调地址", "重定向地址"],
+    title: { en: "Redirect URI", "zh-CN": "回调地址 / Redirect URI" },
+    description: {
+      en: "A redirect URI is the address the OAuth system sends the user back to after authorization is finished. You can think of it as the 'return address' for the login or authorization process.",
+      "zh-CN":
+        "回调地址是 OAuth 授权完成后，系统把用户带回去的那个地址。可以把它理解成“授权流程结束后的返回地址”。",
+    },
+  },
+  {
+    id: "client-id-secret",
+    aliases: ["client id", "client-id", "client secret", "client-secret", "客户端 id", "客户端密钥"],
+    title: { en: "Client ID / client secret", "zh-CN": "客户端 ID / 客户端密钥" },
+    description: {
+      en: "A client ID is the public identifier of an OAuth application, similar to an app number. A client secret is the private password of that application and must not be exposed on public pages or untrusted devices.",
+      "zh-CN":
+        "客户端 ID 是 OAuth 应用的公开编号，类似应用的“身份证号”；客户端密钥则像这个应用自己的“密码”，不能随便暴露在公开页面、前端代码或不可信设备上。",
     },
   },
   {
@@ -53,9 +183,9 @@ const glossaryEntries: GlossaryEntry[] = [
     aliases: ["token", "令牌"],
     title: { en: "Token", "zh-CN": "Token（令牌）" },
     description: {
-      en: "A token is a credential string used to identify or authorize a request. You can think of it as a temporary digital pass used by a program or user session.",
+      en: "A token is a credential string used to identify or authorize a request. For beginners, you can think of it as a temporary digital pass or ticket. Whoever carries the correct token may be allowed to enter a certain function or call a certain API.",
       "zh-CN":
-        "Token 是用于标识或授权请求的一段凭证字符串。可以把它理解为程序或会话访问系统时使用的临时数字通行证。",
+        "Token 是用于标识身份或进行授权的一段凭证字符串。对新手来说，可以把它理解成一张“临时电子通行证”或“电子门票”，拿着合适的 Token 才能访问对应功能或接口。",
     },
   },
   {
@@ -102,8 +232,8 @@ const glossaryEntries: GlossaryEntry[] = [
     aliases: ["json"],
     title: { en: "JSON", "zh-CN": "JSON" },
     description: {
-      en: "JSON is a lightweight text format for structured data. It is widely used for API request bodies and response results.",
-      "zh-CN": "JSON 是一种轻量级结构化文本格式，常用于 API 请求体和响应结果。",
+      en: "JSON is a lightweight text format for structured data. It looks like organized key-value text and is widely used when APIs send or receive data. You can think of it as a machine-friendly way to write a data form.",
+      "zh-CN": "JSON 是一种轻量级结构化文本格式，看起来像一组有条理的“键：值”数据。接口在传输数据时经常用它，你可以把它理解成一种机器更容易看懂的数据表单写法。",
     },
   },
   {
@@ -111,9 +241,9 @@ const glossaryEntries: GlossaryEntry[] = [
     aliases: ["jwt"],
     title: { en: "JWT", "zh-CN": "JWT" },
     description: {
-      en: "JWT stands for JSON Web Token. It is a token format often used to store login identity and expiry information.",
+      en: "JWT stands for JSON Web Token. It is a common token format that can carry login identity, expiry time, and other small pieces of verification information. Many systems use it after login to prove who you are.",
       "zh-CN":
-        "JWT 是 JSON Web Token 的缩写，是一种常用于保存登录身份和过期信息的令牌格式。",
+        "JWT 是 JSON Web Token 的缩写，是一种很常见的令牌格式。它里面通常会保存登录身份、过期时间等少量校验信息，很多系统登录后都会用它来证明“你是谁”。",
     },
   },
   {
@@ -150,9 +280,9 @@ const glossaryEntries: GlossaryEntry[] = [
     aliases: ["webhook", "回调"],
     title: { en: "Webhook", "zh-CN": "Webhook" },
     description: {
-      en: "A webhook is an automatic HTTP callback. When an event happens, the system pushes a message to a URL you configured.",
+      en: "A webhook is an automatic HTTP callback. When a specific event happens, the system actively sends a message to the URL you configured. You can think of it as 'the system calling you back automatically'.",
       "zh-CN":
-        "Webhook 是一种自动 HTTP 回调。当事件发生时，系统会把消息主动推送到你配置好的 URL。",
+        "Webhook 是一种自动 HTTP 回调。当某个事件发生时，系统会主动把消息发到你配置好的 URL。可以把它理解成“系统自动回头通知你”。",
     },
   },
   {
@@ -160,9 +290,9 @@ const glossaryEntries: GlossaryEntry[] = [
     aliases: ["quota", "额度", "配额"],
     title: { en: "Quota", "zh-CN": "额度 / 配额" },
     description: {
-      en: "Quota means the allowed amount of usage within a period or rule scope, such as request count, token count, or money limit.",
+      en: "Quota means the amount you are allowed to use within a period or rule range. It can be understood as a usage limit or allowance, such as request count, token count, balance amount, or daily cap.",
       "zh-CN":
-        "额度或配额，表示在某个时间范围或规则范围内允许使用的量，例如请求次数、Token 数或金额上限。",
+        "额度或配额，表示你在某个时间范围或规则范围内“最多可以用多少”。可以把它理解成使用上限或可用份额，比如请求次数、Token 数、余额金额或每日上限。",
     },
   },
   {
@@ -218,9 +348,9 @@ const glossaryEntries: GlossaryEntry[] = [
     aliases: ["rbac", "role-based access control", "权限控制", "角色权限"],
     title: { en: "RBAC", "zh-CN": "RBAC（基于角色的权限控制）" },
     description: {
-      en: "RBAC stands for Role-Based Access Control. Permissions are assigned through roles or groups instead of being configured one by one for every action.",
+      en: "RBAC stands for Role-Based Access Control. Instead of deciding every permission one by one for every person, the system groups permissions into roles or groups first, then assigns those roles to users.",
       "zh-CN":
-        "RBAC 是“基于角色的权限控制”，即通过角色或群组授予权限，而不是为每个动作逐项单独配置。",
+        "RBAC 是“基于角色的权限控制”。意思不是给每个人逐项勾选每一个权限，而是先把权限打包成角色或群组，再把这些角色分配给用户。",
     },
   },
   {
@@ -406,9 +536,9 @@ const glossaryEntries: GlossaryEntry[] = [
     ],
     title: { en: "Payload", "zh-CN": "载荷 / 数据体" },
     description: {
-      en: "Payload means the main data content sent in a request or returned in a response, excluding surrounding protocol information.",
+      en: "Payload means the main useful data carried inside a request or response, excluding surrounding technical wrapper information. In plain words, it is the 'actual content' you really care about.",
       "zh-CN":
-        "载荷或数据体，指请求发送或响应返回时的主要数据内容，不包含外围协议控制信息。",
+        "载荷或数据体，指请求发送或响应返回时真正有用的主要数据，不包含外围那些技术性包装信息。简单说，就是你真正关心的“内容本体”。",
     },
   },
   {
@@ -416,9 +546,9 @@ const glossaryEntries: GlossaryEntry[] = [
     aliases: ["metadata", "元数据"],
     title: { en: "Metadata", "zh-CN": "元数据" },
     description: {
-      en: "Metadata is descriptive information about data, such as time, source, header fields, status, or category, rather than the main business content itself.",
+      en: "Metadata means 'data about data'. It describes the main content rather than being the main content itself. For example, creation time, source, status, or category can all be metadata.",
       "zh-CN":
-        "元数据是“描述数据的数据”，例如时间、来源、头信息、状态或分类，而不是主要业务内容本身。",
+        "元数据就是“描述数据的数据”。它不是你主要关心的正文内容，而是对正文的补充说明，比如创建时间、来源、状态、分类等。",
     },
   },
   {
