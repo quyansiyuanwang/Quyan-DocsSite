@@ -5,7 +5,7 @@ Use this page to create and maintain access keys for account-level programmatic 
 ## Page purpose
 
 - Create named access keys.
-- Reveal and copy keys when allowed.
+- Copy a newly created key immediately after creation.
 - Review usage and expiry information.
 - Delete keys that are no longer needed.
 
@@ -14,7 +14,7 @@ Use this page to create and maintain access keys for account-level programmatic 
 ### Key list
 
 - Key name.
-- Masked or full key display depending on state.
+- Existing keys appear only in masked form and cannot be re-read in full.
 - Request count and last-used time.
 - Expiry information.
 
@@ -22,7 +22,7 @@ Use this page to create and maintain access keys for account-level programmatic 
 
 - Create key.
 - Refresh list.
-- Copy key.
+- Copy the newly created key.
 - Delete key.
 
 ## Common actions
@@ -35,7 +35,8 @@ Use this page to create and maintain access keys for account-level programmatic 
 ## Notes
 
 - Newly created secret values are often shown only once.
-- Some create or reveal actions can require a verification step.
+- Existing keys remain listable for identification and lifecycle management, but not re-readable in full.
+- Some creation flows can require a verification step.
 - Treat access keys like passwords and never expose them in shared screenshots or chats.
 
 ## Related pages
