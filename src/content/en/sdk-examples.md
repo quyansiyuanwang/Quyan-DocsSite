@@ -47,12 +47,60 @@ Includes:
 - minimal Node OAuth demo
 - minimal Python OAuth demo
 
+### `Auth Center App Management`
+
+Best for:
+
+- teams exposing this platform as their authentication center
+- JWT + JWKS verification designs
+- dual-token access + refresh flows
+- review and app-registration workflows
+
+Includes:
+
+- Auth Center vs OAuth differences
+- short-token and refresh-token behavior
+- `client_credentials` no-refresh-token rule
+- app registration and review guidance
+
+### `Auth Center Node SDK`
+
+Best for:
+
+- Node.js backends verifying JWT access tokens locally
+- code exchange and refresh handling on a trusted server
+- machine-to-machine integrations using `client_credentials`
+
+### `Auth Center Python SDK`
+
+Best for:
+
+- Python services verifying JWT access tokens locally
+- automation and backend integrations
+- refresh-token exchange from server-side code
+
+### `Auth Center Browser / SPA Example`
+
+Best for:
+
+- browser-first applications
+- public clients using PKCE
+- teams deciding where refresh tokens should be stored
+
+Includes:
+
+- PKCE helper code
+- callback handling example
+- backend exchange recommendation
+- browser security boundaries
+
 ## Suggested reading order
 
 1. Start with `OAuth App Management` to create the app and register redirect URIs.
 2. Continue with `OAuth Demo` to run the authorization-code flow end to end.
 3. If you only need business API access, go directly to `Node SDK` or `Python SDK`.
 4. Use `API Documentation` and Swagger for exact field-level details.
+5. If you are building an authentication-center integration, read `Auth Center App Management` first, then choose the Node, Python, or Browser example.
 
 ## Minimum integration checklist
 
@@ -61,6 +109,7 @@ Includes:
 3. Test one endpoint with `curl` first.
 4. Then implement the matching language template.
 5. If using third-party login, create the OAuth app and register the redirect URI first.
+6. If using the auth center mode, confirm whether your app is `public` or `confidential`, then implement JWKS verification before going live.
 
 ## Recommended follow-up reading
 
@@ -69,3 +118,7 @@ Includes:
 - `OAuth Demo`
 - `API Documentation`
 - `OAuth App Management`
+- `Auth Center App Management`
+- `Auth Center Node SDK`
+- `Auth Center Python SDK`
+- `Auth Center Browser / SPA Example`
