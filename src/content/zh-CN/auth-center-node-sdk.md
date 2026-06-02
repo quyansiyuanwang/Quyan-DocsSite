@@ -176,7 +176,12 @@ export async function refreshAccessToken({
 ## 5. `client_credentials` 机器间调用
 
 ```js
-export async function getMachineToken({ baseUrl, clientId, clientSecret, scope }) {
+export async function getMachineToken({
+  baseUrl,
+  clientId,
+  clientSecret,
+  scope,
+}) {
   const response = await fetch(`${baseUrl}/auth-center/token`, {
     method: "POST",
     headers: {

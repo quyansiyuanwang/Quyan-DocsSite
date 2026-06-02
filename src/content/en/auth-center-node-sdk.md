@@ -64,7 +64,8 @@ import jwt from "jsonwebtoken";
 
 function base64UrlToBuffer(input) {
   const normalized = input.replace(/-/g, "+").replace(/_/g, "/");
-  const padding = normalized.length % 4 === 0 ? "" : "=".repeat(4 - (normalized.length % 4));
+  const padding =
+    normalized.length % 4 === 0 ? "" : "=".repeat(4 - (normalized.length % 4));
   return Buffer.from(normalized + padding, "base64");
 }
 
@@ -127,7 +128,9 @@ export async function exchangeAuthorizationCode({
 
   const payload = await response.json();
   if (!response.ok) {
-    throw new Error(payload?.scope || payload?.message || "Token exchange failed");
+    throw new Error(
+      payload?.scope || payload?.message || "Token exchange failed",
+    );
   }
 
   return payload;
@@ -180,7 +183,12 @@ export async function refreshAccessToken({
 ## 5. Server-to-server with `client_credentials`
 
 ```js
-export async function getMachineToken({ baseUrl, clientId, clientSecret, scope }) {
+export async function getMachineToken({
+  baseUrl,
+  clientId,
+  clientSecret,
+  scope,
+}) {
   const response = await fetch(`${baseUrl}/auth-center/token`, {
     method: "POST",
     headers: {
@@ -196,7 +204,9 @@ export async function getMachineToken({ baseUrl, clientId, clientSecret, scope }
 
   const payload = await response.json();
   if (!response.ok) {
-    throw new Error(payload?.scope || payload?.message || "Machine token request failed");
+    throw new Error(
+      payload?.scope || payload?.message || "Machine token request failed",
+    );
   }
 
   return payload;
