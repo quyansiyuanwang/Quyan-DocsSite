@@ -6,6 +6,8 @@ import homeArticlesEn from "@/content/en/home-articles.md?raw";
 import chatEn from "@/content/en/chat.md?raw";
 import accountSettingsEn from "@/content/en/account-settings.md?raw";
 import accessKeyManagementEn from "@/content/en/access-key-management.md?raw";
+import oauthAppManagementEn from "@/content/en/oauth-app-management.md?raw";
+import authCenterAppManagementEn from "@/content/en/auth-center-app-management.md?raw";
 import notificationSettingsEn from "@/content/en/notification-settings.md?raw";
 import balanceHistoryEn from "@/content/en/balance-history.md?raw";
 import myMonthlyPassesEn from "@/content/en/my-monthly-passes.md?raw";
@@ -20,6 +22,13 @@ import articleManagementEn from "@/content/en/article-management.md?raw";
 import legalPolicyManagementEn from "@/content/en/legal-policy-management.md?raw";
 import relayTokenManagementEn from "@/content/en/relay-token-management.md?raw";
 import apiDocumentationEn from "@/content/en/api-documentation.md?raw";
+import nodeSdkEn from "@/content/en/node-sdk.md?raw";
+import pythonSdkEn from "@/content/en/python-sdk.md?raw";
+import authCenterNodeSdkEn from "@/content/en/auth-center-node-sdk.md?raw";
+import authCenterPythonSdkEn from "@/content/en/auth-center-python-sdk.md?raw";
+import authCenterBrowserSpaExampleEn from "@/content/en/auth-center-browser-spa-example.md?raw";
+import oauthDemoEn from "@/content/en/oauth-demo.md?raw";
+import sdkExamplesEn from "@/content/en/sdk-examples.md?raw";
 import relaySettingsEn from "@/content/en/relay-settings.md?raw";
 import upstreamStatusEn from "@/content/en/upstream-status.md?raw";
 import debugToolsEn from "@/content/en/debug-tools.md?raw";
@@ -42,6 +51,8 @@ import homeArticlesZh from "@/content/zh-CN/home-articles.md?raw";
 import chatZh from "@/content/zh-CN/chat.md?raw";
 import accountSettingsZh from "@/content/zh-CN/account-settings.md?raw";
 import accessKeyManagementZh from "@/content/zh-CN/access-key-management.md?raw";
+import oauthAppManagementZh from "@/content/zh-CN/oauth-app-management.md?raw";
+import authCenterAppManagementZh from "@/content/zh-CN/auth-center-app-management.md?raw";
 import notificationSettingsZh from "@/content/zh-CN/notification-settings.md?raw";
 import balanceHistoryZh from "@/content/zh-CN/balance-history.md?raw";
 import myMonthlyPassesZh from "@/content/zh-CN/my-monthly-passes.md?raw";
@@ -56,6 +67,13 @@ import articleManagementZh from "@/content/zh-CN/article-management.md?raw";
 import legalPolicyManagementZh from "@/content/zh-CN/legal-policy-management.md?raw";
 import relayTokenManagementZh from "@/content/zh-CN/relay-token-management.md?raw";
 import apiDocumentationZh from "@/content/zh-CN/api-documentation.md?raw";
+import nodeSdkZh from "@/content/zh-CN/node-sdk.md?raw";
+import pythonSdkZh from "@/content/zh-CN/python-sdk.md?raw";
+import authCenterNodeSdkZh from "@/content/zh-CN/auth-center-node-sdk.md?raw";
+import authCenterPythonSdkZh from "@/content/zh-CN/auth-center-python-sdk.md?raw";
+import authCenterBrowserSpaExampleZh from "@/content/zh-CN/auth-center-browser-spa-example.md?raw";
+import oauthDemoZh from "@/content/zh-CN/oauth-demo.md?raw";
+import sdkExamplesZh from "@/content/zh-CN/sdk-examples.md?raw";
 import relaySettingsZh from "@/content/zh-CN/relay-settings.md?raw";
 import upstreamStatusZh from "@/content/zh-CN/upstream-status.md?raw";
 import debugToolsZh from "@/content/zh-CN/debug-tools.md?raw";
@@ -212,6 +230,30 @@ export const docsPages = [
     ["access-key", "security", "key"],
     accessKeyManagementEn,
     accessKeyManagementZh,
+  ),
+  createDocsPage(
+    "oauth-app-management",
+    "Account",
+    "账号",
+    "OAuth app management",
+    "OAuth 应用管理",
+    "Register applications, manage redirect URIs, and rotate client secrets safely.",
+    "说明应用注册、回调地址管理，以及如何安全轮换客户端密钥。",
+    ["oauth", "application", "client"],
+    oauthAppManagementEn,
+    oauthAppManagementZh,
+  ),
+  createDocsPage(
+    "auth-center-app-management",
+    "Account",
+    "账号",
+    "Auth Center app management",
+    "认证中心应用管理",
+    "Register external applications that use this platform as an authentication center with JWT, JWKS, and dual-token refresh behavior.",
+    "注册把本平台当作认证中心使用的外部应用，支持 JWT、JWKS 与双令牌刷新机制。",
+    ["auth-center", "jwt", "jwks", "refresh-token", "application"],
+    authCenterAppManagementEn,
+    authCenterAppManagementZh,
   ),
   createDocsPage(
     "notification-settings",
@@ -380,6 +422,90 @@ export const docsPages = [
     ["api", "reference", "endpoint"],
     apiDocumentationEn,
     apiDocumentationZh,
+  ),
+  createDocsPage(
+    "node-sdk",
+    "Reference",
+    "参考",
+    "Node SDK",
+    "Node SDK",
+    "Minimal Node.js API calling templates for backend integrations.",
+    "用于后端集成的最小 Node.js API 调用模板。",
+    ["sdk", "node", "api", "backend"],
+    nodeSdkEn,
+    nodeSdkZh,
+  ),
+  createDocsPage(
+    "python-sdk",
+    "Reference",
+    "参考",
+    "Python SDK",
+    "Python SDK",
+    "Minimal Python API calling templates for scripts and backend services.",
+    "用于脚本与后端服务的最小 Python API 调用模板。",
+    ["sdk", "python", "api", "backend"],
+    pythonSdkEn,
+    pythonSdkZh,
+  ),
+  createDocsPage(
+    "auth-center-node-sdk",
+    "Reference",
+    "参考",
+    "Auth Center Node SDK",
+    "认证中心 Node SDK",
+    "Node.js examples for exchanging codes, refreshing access tokens, and verifying JWTs with JWKS.",
+    "使用 Node.js 完成授权码交换、刷新访问令牌，并通过 JWKS 校验 JWT 的示例。",
+    ["auth-center", "sdk", "node", "jwks", "jwt"],
+    authCenterNodeSdkEn,
+    authCenterNodeSdkZh,
+  ),
+  createDocsPage(
+    "auth-center-python-sdk",
+    "Reference",
+    "参考",
+    "Auth Center Python SDK",
+    "认证中心 Python SDK",
+    "Python examples for token exchange, refresh, and JWT verification against JWKS.",
+    "使用 Python 完成令牌交换、刷新以及基于 JWKS 的 JWT 校验示例。",
+    ["auth-center", "sdk", "python", "jwks", "jwt"],
+    authCenterPythonSdkEn,
+    authCenterPythonSdkZh,
+  ),
+  createDocsPage(
+    "auth-center-browser-spa-example",
+    "Reference",
+    "参考",
+    "Auth Center Browser / SPA Example",
+    "认证中心 Browser / SPA 示例",
+    "PKCE and browser-session guidance for public clients using the auth center.",
+    "面向公共客户端的 PKCE 与浏览器会话接入示例。",
+    ["auth-center", "spa", "browser", "pkce", "public-client"],
+    authCenterBrowserSpaExampleEn,
+    authCenterBrowserSpaExampleZh,
+  ),
+  createDocsPage(
+    "oauth-demo",
+    "Reference",
+    "参考",
+    "OAuth Demo",
+    "OAuth Demo",
+    "Authorization-code flow diagrams and copy-ready Node/Python OAuth demos.",
+    "提供授权码流程图与可直接复制的 Node/Python OAuth Demo。",
+    ["oauth", "demo", "sequence", "node", "python"],
+    oauthDemoEn,
+    oauthDemoZh,
+  ),
+  createDocsPage(
+    "sdk-examples",
+    "Reference",
+    "参考",
+    "SDK & Examples",
+    "SDK 与示例",
+    "Copy-ready Node and Python templates, plus OAuth flow diagrams for fast integration.",
+    "提供可直接复制的 Node / Python 模板与 OAuth 流程图，便于快速接入。",
+    ["sdk", "example", "oauth", "node", "python"],
+    sdkExamplesEn,
+    sdkExamplesZh,
   ),
   createDocsPage(
     "relay-settings",

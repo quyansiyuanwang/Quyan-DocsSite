@@ -199,7 +199,11 @@
         </section>
 
         <section class="doc-layout">
-          <article class="article-panel" v-html="renderedContent"></article>
+          <article
+            ref="articlePanelRef"
+            class="article-panel"
+            v-html="renderedContent"
+          ></article>
 
           <aside class="toc-panel">
             <div class="toc-sticky">
@@ -232,7 +236,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, nextTick, ref, watch } from "vue";
+import { computed, nextTick, onMounted, ref, watch } from "vue";
 import { marked } from "marked";
 import { useRoute, useRouter } from "vue-router";
 import {
@@ -266,8 +270,64 @@ const route = useRoute();
 const router = useRouter();
 const query = ref("");
 const searchInputRef = ref<HTMLInputElement | null>(null);
+const articlePanelRef = ref<HTMLElement | null>(null);
 const appBaseUrl = APP_BASE_URL;
 const swaggerDocsUrl = SWAGGER_DOCS_URL;
+
+type MermaidModule = typeof import("mermaid");
+
+let mermaidModulePromise: Promise<MermaidModule["default"]> | null = null;
+let mermaidRenderSequence = 0;
+
+const getMermaid = async () => {
+  if (!mermaidModulePromise) {
+    mermaidModulePromise = import("mermaid").then((module) => {
+      module.default.initialize({
+        startOnLoad: false,
+        securityLevel: "loose",
+        theme: "base",
+        darkMode: false,
+        themeVariables: {
+          background: "#ffffff",
+          primaryColor: "#eff6ff",
+          primaryTextColor: "#0f172a",
+          primaryBorderColor: "#3b82f6",
+          secondaryColor: "#f8fafc",
+          secondaryTextColor: "#0f172a",
+          secondaryBorderColor: "#94a3b8",
+          tertiaryColor: "#eef4ff",
+          tertiaryTextColor: "#0f172a",
+          tertiaryBorderColor: "#60a5fa",
+          lineColor: "#334155",
+          textColor: "#0f172a",
+          mainBkg: "#eff6ff",
+          secondBkg: "#f8fafc",
+          tertiaryBkg: "#eef4ff",
+          actorBkg: "#eff6ff",
+          actorBorder: "#3b82f6",
+          actorTextColor: "#0f172a",
+          actorLineColor: "#64748b",
+          signalColor: "#334155",
+          signalTextColor: "#0f172a",
+          labelBoxBkgColor: "#dbeafe",
+          labelBoxBorderColor: "#60a5fa",
+          labelTextColor: "#0f172a",
+          loopTextColor: "#0f172a",
+          noteBkgColor: "#fff7d6",
+          noteBorderColor: "#f59e0b",
+          noteTextColor: "#0f172a",
+          activationBorderColor: "#64748b",
+          activationBkgColor: "#e2e8f0",
+          sequenceNumberColor: "#0f172a",
+        },
+      });
+
+      return module.default;
+    });
+  }
+
+  return mermaidModulePromise;
+};
 
 const toUrlLabel = (value: string) => {
   try {
@@ -503,6 +563,48 @@ const renderMarkdownWithAnchors = (
   return linkGlossaryTerms(html, options.glossaryEntries);
 };
 
+const renderMermaidDiagrams = async () => {
+  if (typeof window === "undefined") return;
+
+  await nextTick();
+
+  const container = articlePanelRef.value;
+  if (!container) return;
+
+  const nodes = Array.from(
+    container.querySelectorAll<HTMLElement>("pre code.language-mermaid"),
+  );
+
+  if (!nodes.length) {
+    return;
+  }
+
+  const mermaid = await getMermaid();
+
+  for (const node of nodes) {
+    const parentPre = node.closest("pre");
+    if (!parentPre || parentPre.dataset.mermaidProcessed === "true") {
+      continue;
+    }
+
+    const source = node.textContent?.trim();
+    if (!source) continue;
+
+    const renderId = `docs-mermaid-${mermaidRenderSequence++}`;
+
+    try {
+      const { svg } = await mermaid.render(renderId, source);
+      const wrapper = document.createElement("div");
+      wrapper.className = "mermaid-diagram-block";
+      wrapper.innerHTML = svg;
+      parentPre.replaceWith(wrapper);
+    } catch (error) {
+      console.error("Failed to render mermaid diagram", error);
+      parentPre.dataset.mermaidProcessed = "true";
+    }
+  }
+};
+
 const currentGlossaryEntries = computed(() => {
   const pageText = [
     currentPage.value.title[locale.value],
@@ -596,6 +698,14 @@ watch(
   },
   { immediate: true },
 );
+
+watch([renderedContent, locale], () => {
+  void renderMermaidDiagrams();
+});
+
+onMounted(() => {
+  void renderMermaidDiagrams();
+});
 </script>
 
 <style scoped>
@@ -603,7 +713,8 @@ watch(
   min-height: 100vh;
   max-width: var(--docs-max-width);
   margin: 0 auto;
-  padding: 20px;
+  padding: 20px 24px 28px;
+  width: 100%;
 }
 
 .docs-topbar {
@@ -708,8 +819,9 @@ watch(
 
 .docs-shell {
   display: grid;
-  grid-template-columns: 288px minmax(0, 1fr);
+  grid-template-columns: 308px minmax(0, 1fr);
   gap: 16px;
+  width: 100%;
 }
 
 .sidebar-panel,
@@ -774,6 +886,96 @@ watch(
 .article-panel,
 .toc-panel {
   padding: 16px;
+}
+
+:deep(.mermaid-diagram-block) {
+  margin: 24px 0;
+  padding: 20px;
+  overflow-x: auto;
+  border: 1px solid var(--docs-diagram-border);
+  border-radius: 16px;
+  background:
+    linear-gradient(
+      180deg,
+      var(--docs-diagram-bg),
+      var(--docs-diagram-bg-soft)
+    ),
+    var(--docs-diagram-bg);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.7),
+    0 10px 28px rgba(15, 23, 42, 0.08);
+}
+
+:deep(.mermaid-diagram-block svg) {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto;
+  min-width: min(100%, 1080px);
+}
+
+:deep(.mermaid-diagram-block svg text) {
+  fill: #0f172a !important;
+}
+
+:deep(.mermaid-diagram-block svg .label),
+:deep(.mermaid-diagram-block svg .messageText),
+:deep(.mermaid-diagram-block svg .loopText),
+:deep(.mermaid-diagram-block svg .noteText),
+:deep(.mermaid-diagram-block svg .actor),
+:deep(.mermaid-diagram-block svg .actor > tspan) {
+  fill: #0f172a !important;
+  color: #0f172a !important;
+  font-weight: 600;
+}
+
+:deep(.mermaid-diagram-block svg .note),
+:deep(.mermaid-diagram-block svg .note rect),
+:deep(.mermaid-diagram-block svg .labelBox),
+:deep(.mermaid-diagram-block svg .actor-box),
+:deep(.mermaid-diagram-block svg .actor-man),
+:deep(.mermaid-diagram-block svg .node rect),
+:deep(.mermaid-diagram-block svg .node polygon),
+:deep(.mermaid-diagram-block svg .node circle) {
+  filter: saturate(1.02) contrast(1.02);
+}
+
+:deep(.mermaid-diagram-block svg .actor),
+:deep(.mermaid-diagram-block svg .actor-box),
+:deep(.mermaid-diagram-block svg .labelBox),
+:deep(.mermaid-diagram-block svg .label-container),
+:deep(.mermaid-diagram-block svg .loopText),
+:deep(.mermaid-diagram-block svg .loopText > tspan),
+:deep(.mermaid-diagram-block svg .note),
+:deep(.mermaid-diagram-block svg .note rect),
+:deep(.mermaid-diagram-block svg .activation0),
+:deep(.mermaid-diagram-block svg .activation1),
+:deep(.mermaid-diagram-block svg .activation2) {
+  fill: #eff6ff !important;
+  stroke: #60a5fa !important;
+}
+
+:deep(.mermaid-diagram-block svg .note),
+:deep(.mermaid-diagram-block svg .note rect) {
+  fill: #fff7d6 !important;
+  stroke: #f59e0b !important;
+}
+
+:deep(.mermaid-diagram-block svg .activation0),
+:deep(.mermaid-diagram-block svg .activation1),
+:deep(.mermaid-diagram-block svg .activation2) {
+  fill: #dbeafe !important;
+  stroke: #93c5fd !important;
+}
+
+:deep(.mermaid-diagram-block svg .messageLine0),
+:deep(.mermaid-diagram-block svg .messageLine1),
+:deep(.mermaid-diagram-block svg .actor-line),
+:deep(.mermaid-diagram-block svg .loopLine),
+:deep(.mermaid-diagram-block svg .loopText),
+:deep(.mermaid-diagram-block svg path),
+:deep(.mermaid-diagram-block svg line) {
+  stroke-width: 1.6px;
 }
 
 .sidebar-groups {
@@ -1144,13 +1346,13 @@ watch(
 
 .doc-layout {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 250px;
+  grid-template-columns: minmax(0, 1fr) 280px;
   gap: 16px;
   align-items: start;
 }
 
 .article-panel {
-  padding: 24px 26px;
+  padding: 28px 32px;
 }
 
 .article-panel :deep(h1) {
@@ -1205,6 +1407,66 @@ watch(
 
 .article-panel :deep(p + p) {
   margin-top: 12px;
+}
+
+.article-panel :deep(.docs-jump-grid) {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+  margin: 18px 0 24px;
+}
+
+.article-panel :deep(.docs-jump-card) {
+  display: grid;
+  gap: 8px;
+  padding: 16px;
+  border: 1px solid var(--docs-border);
+  border-radius: 12px;
+  background: linear-gradient(
+    180deg,
+    var(--docs-surface-strong),
+    var(--docs-surface-soft)
+  );
+  color: inherit;
+  text-decoration: none;
+  box-shadow: var(--docs-shadow-soft);
+  transition:
+    transform 0.18s ease,
+    border-color 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+.article-panel :deep(.docs-jump-card:hover) {
+  transform: translateY(-1px);
+  border-color: rgba(22, 119, 255, 0.26);
+  box-shadow: var(--docs-shadow);
+}
+
+.article-panel :deep(.docs-jump-card.current) {
+  border-color: rgba(22, 119, 255, 0.3);
+  background: linear-gradient(
+    180deg,
+    rgba(37, 99, 235, 0.14),
+    rgba(37, 99, 235, 0.05)
+  );
+}
+
+.article-panel :deep(.docs-jump-card strong) {
+  font-size: 16px;
+  color: var(--docs-text-strong);
+}
+
+.article-panel :deep(.docs-jump-card span) {
+  line-height: 1.65;
+  color: var(--docs-muted-soft);
+}
+
+.article-panel :deep(.docs-jump-card .docs-jump-eyebrow) {
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--docs-primary-strong);
+  font-weight: 800;
 }
 
 .article-panel :deep(ul),
@@ -1357,6 +1619,15 @@ watch(
 
   .article-panel {
     padding: 20px 16px;
+  }
+
+  :deep(.mermaid-diagram-block) {
+    padding: 14px;
+    border-radius: 12px;
+  }
+
+  :deep(.mermaid-diagram-block svg) {
+    min-width: 760px;
   }
 
   .doc-actions {
