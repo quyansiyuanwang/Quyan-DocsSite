@@ -1,6 +1,14 @@
 <template>
-  <div class="docs-page">
-    <header class="docs-topbar">
+  <div
+    ref="docsPageRef"
+    class="docs-page"
+    :class="{
+      'is-embedded': isEmbedded,
+      'is-embedded-wide': isEmbeddedWide,
+      'is-embedded-xl': isEmbeddedExtraWide,
+    }"
+  >
+    <header class="docs-topbar" :class="{ 'is-embedded': isEmbedded }">
       <div class="brand-block">
         <div class="brand-mark">Q</div>
         <div>
@@ -28,7 +36,7 @@
     </header>
 
     <div class="docs-shell">
-      <aside class="sidebar-panel">
+      <aside v-if="showSidebarPanel" class="sidebar-panel">
         <div class="sidebar-section sidebar-toolbar">
           <div class="sidebar-headline">
             <div class="sidebar-eyebrow">Documentation hub</div>
@@ -102,18 +110,18 @@
       </aside>
 
       <main class="content-panel">
-        <section class="doc-hero">
+        <section class="doc-hero" :class="{ 'is-embedded': isEmbedded }">
           <div class="doc-hero-main">
-            <div class="doc-breadcrumbs">
+            <div v-if="showEmbeddedMeta" class="doc-breadcrumbs">
               <span>{{ currentPage.category[locale] }}</span>
               <span>/</span>
               <span>{{ currentPage.slug }}</span>
             </div>
 
             <div class="doc-meta-row">
-              <span class="doc-method">DOC</span>
+              <span v-if="showEmbeddedMeta" class="doc-method">DOC</span>
               <span class="doc-route">{{ docsRouteLabel }}</span>
-              <span class="doc-update"
+              <span v-if="showEmbeddedMeta" class="doc-update"
                 >Updated {{ currentPage.updatedAt }}</span
               >
             </div>
@@ -121,14 +129,14 @@
             <h1>{{ currentPage.title[locale] }}</h1>
             <p class="doc-summary">{{ currentPage.summary[locale] }}</p>
 
-            <div class="doc-tags">
+            <div v-if="showEmbeddedMeta" class="doc-tags">
               <span v-for="tag in currentPage.tags" :key="tag" class="doc-tag"
                 >#{{ tag }}</span
               >
             </div>
           </div>
 
-          <div class="doc-hero-side">
+          <div v-if="showHeroSide" class="doc-hero-side">
             <div class="hero-side-card">
               <div class="hero-side-label">Route</div>
               <div class="hero-side-value">{{ currentPage.slug }}</div>
@@ -202,10 +210,11 @@
           <article
             ref="articlePanelRef"
             class="article-panel"
+            :class="{ 'is-embedded': isEmbedded }"
             v-html="renderedContent"
           ></article>
 
-          <aside class="toc-panel">
+          <aside v-if="showTocPanel" class="toc-panel">
             <div class="toc-sticky">
               <div class="section-label">{{ ui.toc }}</div>
               <a
@@ -236,7 +245,14 @@
 </template>
 
 <script setup lang="ts">
-import { computed, nextTick, onMounted, ref, watch } from "vue";
+import {
+  computed,
+  nextTick,
+  onBeforeUnmount,
+  onMounted,
+  ref,
+  watch,
+} from "vue";
 import { marked } from "marked";
 import { useRoute, useRouter } from "vue-router";
 import {
@@ -271,8 +287,46 @@ const router = useRouter();
 const query = ref("");
 const searchInputRef = ref<HTMLInputElement | null>(null);
 const articlePanelRef = ref<HTMLElement | null>(null);
+const docsPageRef = ref<HTMLElement | null>(null);
+const isEmbedded = computed(() => route.query.embed === "1");
+const embeddedViewportWidth = ref<number>(0);
 const appBaseUrl = APP_BASE_URL;
 const swaggerDocsUrl = SWAGGER_DOCS_URL;
+
+const EMBED_WIDE_BREAKPOINT = 1120;
+const EMBED_XL_BREAKPOINT = 1360;
+
+const isEmbeddedWide = computed(
+  () =>
+    isEmbedded.value && embeddedViewportWidth.value >= EMBED_WIDE_BREAKPOINT,
+);
+const isEmbeddedExtraWide = computed(
+  () => isEmbedded.value && embeddedViewportWidth.value >= EMBED_XL_BREAKPOINT,
+);
+const showSidebarPanel = computed(
+  () => !isEmbedded.value || isEmbeddedWide.value,
+);
+const showEmbeddedMeta = computed(
+  () => !isEmbedded.value || isEmbeddedWide.value,
+);
+const showHeroSide = computed(() => !isEmbedded.value || isEmbeddedWide.value);
+const showTocPanel = computed(
+  () => !isEmbedded.value || isEmbeddedExtraWide.value,
+);
+
+let docsPageResizeObserver: ResizeObserver | null = null;
+
+const updateEmbeddedViewportWidth = () => {
+  if (typeof window === "undefined") {
+    return;
+  }
+
+  embeddedViewportWidth.value =
+    docsPageRef.value?.clientWidth ||
+    document.documentElement?.clientWidth ||
+    window.visualViewport?.width ||
+    window.innerWidth;
+};
 
 type MermaidModule = typeof import("mermaid");
 
@@ -682,8 +736,11 @@ const openFirstMatch = async () => {
 };
 
 const copyCurrentPageUrl = async () => {
-  const url = `${window.location.origin}/${locale.value}/${currentPage.value.slug}`;
-  await navigator.clipboard.writeText(url);
+  const url = new URL(
+    `/${locale.value}/${currentPage.value.slug}`,
+    window.location.origin,
+  );
+  await navigator.clipboard.writeText(url.toString());
 };
 
 watch(
@@ -704,7 +761,30 @@ watch([renderedContent, locale], () => {
 });
 
 onMounted(() => {
+  updateEmbeddedViewportWidth();
+  if (typeof ResizeObserver !== "undefined" && docsPageRef.value) {
+    docsPageResizeObserver = new ResizeObserver(() => {
+      updateEmbeddedViewportWidth();
+    });
+    docsPageResizeObserver.observe(docsPageRef.value);
+  }
+
+  window.addEventListener("resize", updateEmbeddedViewportWidth);
+  window.visualViewport?.addEventListener(
+    "resize",
+    updateEmbeddedViewportWidth,
+  );
   void renderMermaidDiagrams();
+});
+
+onBeforeUnmount(() => {
+  docsPageResizeObserver?.disconnect();
+  docsPageResizeObserver = null;
+  window.removeEventListener("resize", updateEmbeddedViewportWidth);
+  window.visualViewport?.removeEventListener(
+    "resize",
+    updateEmbeddedViewportWidth,
+  );
 });
 </script>
 
@@ -713,8 +793,17 @@ onMounted(() => {
   min-height: 100vh;
   max-width: var(--docs-max-width);
   margin: 0 auto;
-  padding: 20px 24px 28px;
+  padding: 16px 20px 24px;
   width: 100%;
+}
+
+.docs-page.is-embedded {
+  min-height: auto;
+  padding: 0;
+}
+
+.docs-page.is-embedded-wide {
+  padding: 16px 20px 24px;
 }
 
 .docs-topbar {
@@ -725,18 +814,23 @@ onMounted(() => {
   margin-bottom: 16px;
   padding: 14px 18px;
   border: 1px solid var(--docs-topbar-border);
-  border-radius: 12px;
-  background: linear-gradient(
-    180deg,
-    var(--docs-topbar-start),
-    var(--docs-topbar-end)
-  );
+  border-radius: 8px;
+  background: var(--docs-topbar-start);
   color: var(--docs-topbar-text);
   box-shadow: var(--docs-shadow);
   position: sticky;
   top: 12px;
   z-index: 20;
-  backdrop-filter: blur(14px);
+}
+
+.docs-topbar.is-embedded {
+  position: static;
+  top: auto;
+  margin-bottom: 12px;
+  padding: 10px 12px;
+  border-radius: 0;
+  border-left: 0;
+  border-right: 0;
 }
 
 .brand-block {
@@ -750,13 +844,10 @@ onMounted(() => {
   place-items: center;
   width: 38px;
   height: 38px;
-  border-radius: 10px;
-  background: linear-gradient(135deg, #1677ff, #0f5fe0 68%, #0a46a6);
-  color: #f8fbff;
-  font-weight: 900;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.2),
-    0 8px 18px rgba(22, 119, 255, 0.2);
+  border-radius: 8px;
+  background: var(--docs-surface-muted);
+  color: var(--docs-text-strong);
+  font-weight: 700;
 }
 
 .brand-name {
@@ -786,7 +877,7 @@ onMounted(() => {
   justify-content: center;
   min-height: 34px;
   padding: 0 12px;
-  border-radius: 9px;
+  border-radius: 6px;
   border: 1px solid var(--docs-topbar-pill-border);
   background: var(--docs-topbar-pill);
   color: inherit;
@@ -802,25 +893,20 @@ onMounted(() => {
 .top-link:hover,
 .action-button:hover {
   border-color: var(--docs-border-strong);
-  box-shadow: var(--docs-shadow-soft);
 }
 
 .top-link.primary,
 .action-button {
-  background: linear-gradient(
-    180deg,
-    var(--docs-primary),
-    var(--docs-primary-strong)
-  );
-  color: #fff;
-  border-color: transparent;
-  box-shadow: 0 8px 18px rgba(22, 119, 255, 0.18);
+  background: var(--docs-surface-strong);
+  color: var(--docs-text);
+  border-color: var(--docs-border);
+  box-shadow: none;
 }
 
 .docs-shell {
   display: grid;
   grid-template-columns: 308px minmax(0, 1fr);
-  gap: 16px;
+  gap: 14px;
   width: 100%;
 }
 
@@ -834,7 +920,7 @@ onMounted(() => {
   gap: 12px;
   align-self: start;
   position: sticky;
-  top: 84px;
+  top: 68px;
 }
 
 .sidebar-section,
@@ -843,10 +929,9 @@ onMounted(() => {
 .article-panel,
 .toc-panel {
   border: 1px solid var(--docs-border);
-  border-radius: 12px;
+  border-radius: 8px;
   background: var(--docs-surface);
   box-shadow: var(--docs-shadow);
-  backdrop-filter: blur(12px);
 }
 
 .sidebar-eyebrow,
@@ -864,7 +949,7 @@ onMounted(() => {
 
 .sidebar-headline {
   display: grid;
-  gap: 8px;
+  gap: 4px;
 }
 
 .sidebar-headline h2 {
@@ -885,25 +970,21 @@ onMounted(() => {
 .result-panel,
 .article-panel,
 .toc-panel {
-  padding: 16px;
+  padding: 14px;
+}
+
+.sidebar-toolbar {
+  padding: 6px 14px 14px;
 }
 
 :deep(.mermaid-diagram-block) {
   margin: 24px 0;
-  padding: 20px;
+  padding: 16px;
   overflow-x: auto;
   border: 1px solid var(--docs-diagram-border);
-  border-radius: 16px;
-  background:
-    linear-gradient(
-      180deg,
-      var(--docs-diagram-bg),
-      var(--docs-diagram-bg-soft)
-    ),
-    var(--docs-diagram-bg);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.7),
-    0 10px 28px rgba(15, 23, 42, 0.08);
+  border-radius: 8px;
+  background: var(--docs-diagram-bg);
+  box-shadow: none;
 }
 
 :deep(.mermaid-diagram-block svg) {
@@ -979,7 +1060,7 @@ onMounted(() => {
 }
 
 .sidebar-groups {
-  max-height: calc(100vh - 224px);
+  max-height: calc(100vh - 208px);
   overflow-y: auto;
   overscroll-behavior: contain;
   scrollbar-gutter: stable;
@@ -987,7 +1068,7 @@ onMounted(() => {
 
 .sidebar-toolbar {
   display: grid;
-  gap: 12px;
+  gap: 8px;
 }
 
 .sidebar-stats {
@@ -1001,12 +1082,8 @@ onMounted(() => {
   gap: 4px;
   padding: 10px 12px;
   border: 1px solid var(--docs-border);
-  border-radius: 10px;
-  background: linear-gradient(
-    180deg,
-    var(--docs-surface-strong),
-    var(--docs-surface-soft)
-  );
+  border-radius: 8px;
+  background: var(--docs-surface-strong);
 }
 
 .stat-chip strong {
@@ -1051,7 +1128,7 @@ onMounted(() => {
 .locale-button {
   min-height: 36px;
   border-color: var(--docs-border);
-  border-radius: 9px;
+  border-radius: 6px;
   background: var(--docs-surface-strong);
   color: var(--docs-muted);
   transition:
@@ -1061,9 +1138,9 @@ onMounted(() => {
 }
 
 .locale-button.active {
-  background: var(--docs-primary-soft);
-  color: var(--docs-primary);
-  border-color: rgba(22, 119, 255, 0.28);
+  background: var(--docs-surface-muted);
+  color: var(--docs-text);
+  border-color: var(--docs-border-strong);
 }
 
 .search-box {
@@ -1076,10 +1153,9 @@ onMounted(() => {
   min-height: 42px;
   padding: 0 14px;
   border: 1px solid var(--docs-border);
-  border-radius: 10px;
+  border-radius: 6px;
   background: var(--docs-surface-soft);
   color: var(--docs-text);
-  box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.03);
 }
 
 .search-box input:focus {
@@ -1106,7 +1182,7 @@ onMounted(() => {
   gap: 4px;
   text-align: left;
   padding: 12px;
-  border-radius: 10px;
+  border-radius: 6px;
   border-color: var(--docs-border);
   background: var(--docs-surface-strong);
   transition:
@@ -1117,13 +1193,8 @@ onMounted(() => {
 
 .page-item:hover,
 .page-item.active {
-  border-color: rgba(22, 119, 255, 0.18);
-  background: linear-gradient(
-    180deg,
-    var(--docs-surface-strong),
-    var(--docs-surface-soft)
-  );
-  box-shadow: var(--docs-shadow-soft);
+  border-color: var(--docs-border-strong);
+  background: var(--docs-surface-muted);
 }
 
 .page-item.active {
@@ -1134,9 +1205,9 @@ onMounted(() => {
   content: "";
   position: absolute;
   inset: 8px auto 8px 0;
-  width: 3px;
+  width: 2px;
   border-radius: 0 999px 999px 0;
-  background: linear-gradient(180deg, var(--docs-primary), var(--docs-accent));
+  background: var(--docs-primary);
 }
 
 .page-item-title {
@@ -1154,21 +1225,34 @@ onMounted(() => {
 
 .content-panel {
   display: grid;
-  gap: 14px;
+  gap: 12px;
   align-content: start;
 }
 
 .doc-hero {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 240px;
-  gap: 16px;
-  background:
-    linear-gradient(180deg, var(--docs-hero-start), var(--docs-hero-end)),
-    linear-gradient(90deg, var(--docs-accent-soft), transparent 30%),
-    var(--docs-surface);
+  gap: 14px;
+  background: var(--docs-hero-start);
   color: var(--docs-hero-text);
   overflow: hidden;
-  padding: 18px;
+  padding: 16px 18px;
+}
+
+.doc-hero.is-embedded {
+  grid-template-columns: 1fr;
+  padding: 14px 16px;
+  border-radius: 0;
+  border-left: 0;
+  border-right: 0;
+}
+
+.docs-page.is-embedded-wide .doc-hero.is-embedded {
+  grid-template-columns: minmax(0, 1fr) 240px;
+  padding: 16px 18px;
+  border-radius: 8px;
+  border-left: 1px solid var(--docs-border);
+  border-right: 1px solid var(--docs-border);
 }
 
 .doc-hero-main,
@@ -1192,8 +1276,8 @@ onMounted(() => {
   gap: 8px;
   padding: 12px;
   border: 1px solid var(--docs-hero-border);
-  border-radius: 10px;
-  background: rgba(255, 255, 255, 0.04);
+  border-radius: 6px;
+  background: var(--docs-surface-strong);
 }
 
 .hero-side-label {
@@ -1229,23 +1313,23 @@ onMounted(() => {
   align-items: center;
   min-height: 26px;
   padding: 0 9px;
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.06);
+  border-radius: 6px;
+  background: var(--docs-surface-strong);
   color: var(--docs-hero-text);
   border: 1px solid var(--docs-hero-border);
   font-size: 11px;
 }
 
 .doc-method {
-  background: linear-gradient(180deg, var(--docs-success), #12803c);
-  color: #f8fffb;
-  font-weight: 900;
+  background: var(--docs-surface-muted);
+  color: var(--docs-text);
+  font-weight: 700;
 }
 
 .doc-hero h1 {
   margin: 0;
-  font-size: clamp(22px, 2.5vw, 32px);
-  line-height: 1.12;
+  font-size: clamp(22px, 2.3vw, 30px);
+  line-height: 1.18;
   letter-spacing: -0.02em;
 }
 
@@ -1269,9 +1353,9 @@ onMounted(() => {
   align-items: center;
   min-height: 24px;
   padding: 0 8px;
-  border-radius: 8px;
+  border-radius: 6px;
   border: 1px solid rgba(148, 163, 184, 0.18);
-  background: rgba(255, 255, 255, 0.06);
+  background: var(--docs-surface-strong);
   color: var(--docs-hero-text);
   font-size: 11px;
 }
@@ -1282,8 +1366,8 @@ onMounted(() => {
 }
 
 .action-button.ghost {
-  background: rgba(255, 255, 255, 0.02);
-  border-color: var(--docs-topbar-pill-border);
+  background: var(--docs-surface-strong);
+  border-color: var(--docs-border);
   color: inherit;
   box-shadow: none;
 }
@@ -1314,13 +1398,9 @@ onMounted(() => {
   display: grid;
   gap: 6px;
   padding: 12px 14px;
-  border-radius: 10px;
+  border-radius: 6px;
   text-align: left;
-  background: linear-gradient(
-    180deg,
-    var(--docs-surface-strong),
-    var(--docs-surface-soft)
-  );
+  background: var(--docs-surface-strong);
   border-color: var(--docs-border);
   transition:
     box-shadow 0.18s ease,
@@ -1328,8 +1408,7 @@ onMounted(() => {
 }
 
 .result-card:hover {
-  border-color: rgba(22, 119, 255, 0.18);
-  box-shadow: var(--docs-shadow-soft);
+  border-color: var(--docs-border-strong);
 }
 
 .result-title {
@@ -1347,12 +1426,34 @@ onMounted(() => {
 .doc-layout {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 280px;
-  gap: 16px;
+  gap: 14px;
   align-items: start;
 }
 
 .article-panel {
-  padding: 28px 32px;
+  padding: 24px 28px;
+}
+
+.article-panel.is-embedded {
+  padding: 20px 18px 28px;
+  border-radius: 0;
+  border-left: 0;
+  border-right: 0;
+}
+
+.docs-page.is-embedded-wide .article-panel.is-embedded {
+  padding: 24px 28px;
+  border-radius: 8px;
+  border-left: 1px solid var(--docs-border);
+  border-right: 1px solid var(--docs-border);
+}
+
+.docs-page.is-embedded-wide .docs-shell {
+  grid-template-columns: 308px minmax(0, 1fr);
+}
+
+.docs-page.is-embedded-xl .doc-layout {
+  grid-template-columns: minmax(0, 1fr) 280px;
 }
 
 .article-panel :deep(h1) {
@@ -1375,7 +1476,7 @@ onMounted(() => {
 .article-panel :deep(.glossary-anchor:target + h3) {
   padding-left: 10px;
   border-left: 4px solid var(--docs-primary);
-  background: linear-gradient(90deg, rgba(37, 99, 235, 0.12), transparent 78%);
+  background: var(--docs-primary-soft);
 }
 
 .article-panel :deep(h2) {
@@ -1421,15 +1522,10 @@ onMounted(() => {
   gap: 8px;
   padding: 16px;
   border: 1px solid var(--docs-border);
-  border-radius: 12px;
-  background: linear-gradient(
-    180deg,
-    var(--docs-surface-strong),
-    var(--docs-surface-soft)
-  );
+  border-radius: 8px;
+  background: var(--docs-surface-strong);
   color: inherit;
   text-decoration: none;
-  box-shadow: var(--docs-shadow-soft);
   transition:
     transform 0.18s ease,
     border-color 0.18s ease,
@@ -1437,18 +1533,13 @@ onMounted(() => {
 }
 
 .article-panel :deep(.docs-jump-card:hover) {
-  transform: translateY(-1px);
-  border-color: rgba(22, 119, 255, 0.26);
-  box-shadow: var(--docs-shadow);
+  transform: none;
+  border-color: var(--docs-border-strong);
 }
 
 .article-panel :deep(.docs-jump-card.current) {
-  border-color: rgba(22, 119, 255, 0.3);
-  background: linear-gradient(
-    180deg,
-    rgba(37, 99, 235, 0.14),
-    rgba(37, 99, 235, 0.05)
-  );
+  border-color: var(--docs-border-strong);
+  background: var(--docs-surface-muted);
 }
 
 .article-panel :deep(.docs-jump-card strong) {
@@ -1485,10 +1576,9 @@ onMounted(() => {
   overflow: auto;
   padding: 16px;
   border: 1px solid var(--docs-border);
-  border-radius: 10px;
+  border-radius: 6px;
   background: var(--docs-code-bg);
   color: var(--docs-code-text);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
 
 .article-panel :deep(pre code) {
@@ -1501,7 +1591,7 @@ onMounted(() => {
   width: 100%;
   border-collapse: collapse;
   overflow: hidden;
-  border-radius: 10px;
+  border-radius: 6px;
   background: var(--docs-table-bg);
 }
 
@@ -1527,7 +1617,7 @@ onMounted(() => {
   align-items: center;
   gap: 10px;
   padding: 9px 10px;
-  border-radius: 9px;
+  border-radius: 6px;
   text-align: left;
   color: var(--docs-text);
   text-decoration: none;
@@ -1537,8 +1627,8 @@ onMounted(() => {
 }
 
 .toc-link:hover {
-  background: var(--docs-primary-soft);
-  color: var(--docs-primary-strong);
+  background: var(--docs-surface-muted);
+  color: var(--docs-text);
 }
 
 .toc-bullet {
@@ -1573,6 +1663,12 @@ onMounted(() => {
 }
 
 @media (max-width: 1120px) {
+  .docs-page.is-embedded-wide .doc-hero,
+  .docs-page.is-embedded-wide .docs-shell,
+  .docs-page.is-embedded-xl .doc-layout {
+    grid-template-columns: 1fr;
+  }
+
   .doc-hero,
   .docs-shell,
   .doc-layout {
@@ -1615,6 +1711,14 @@ onMounted(() => {
   .toc-panel,
   .sidebar-section {
     border-radius: 12px;
+  }
+
+  .docs-page.is-embedded .content-panel {
+    gap: 0;
+  }
+
+  .docs-page.is-embedded .doc-layout {
+    grid-template-columns: 1fr;
   }
 
   .article-panel {

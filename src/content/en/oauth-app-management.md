@@ -170,17 +170,19 @@ This table helps answer questions such as:
 
 ## Common scope meanings
 
-| Scope          | Typical meaning                             | Risk note                                   |
-| -------------- | ------------------------------------------- | ------------------------------------------- |
-| `profile`      | Read basic profile data                     | Usually low-risk baseline access            |
-| `email`        | Read email-related information              | Contains personal identity data             |
-| `notification` | Access notification-related features        | May affect notification flows               |
-| `oauth_client` | Access OAuth client management capabilities | May approach app-level administration       |
-| `accesskey`    | Access access-key related features          | May affect programmatic access, higher risk |
-| `passkey`      | Access passkey-related features             | Touches authentication management           |
-| `two_factor`   | Access two-factor related features          | High-sensitivity security scope             |
+| Scope          | Typical meaning                             | Risk note                                                                        |
+| -------------- | ------------------------------------------- | -------------------------------------------------------------------------------- |
+| `profile`      | Read basic profile data                     | Usually low-risk baseline access                                                 |
+| `email`        | Read email-related information              | Contains personal identity data                                                  |
+| `notification` | Access notification-related features        | May affect notification flows                                                    |
+| `oauth_client` | Access OAuth client management capabilities | May approach app-level administration                                            |
+| `accesskey`    | Start a new access-key creation flow        | Only for creating and receiving a new key, not reading or deleting existing ones |
+| `passkey`      | Access passkey-related features             | Touches authentication management                                                |
+| `two_factor`   | Access two-factor related features          | High-sensitivity security scope                                                  |
 
 Scopes such as `email` and `two_factor` should usually be treated as more sensitive and granted with extra care.
+
+For the `accesskey` scope, the intended meaning is narrower than a general “manage keys” permission: a third-party app may create a new access key for the user and receive that newly created secret once, but it must not treat the authorization as permission to read or delete existing keys.
 
 ## Recommended setup strategy
 
