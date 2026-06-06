@@ -1,38 +1,38 @@
 :root {
   color-scheme: light dark;
-  --docs-bg: #f5f7fb;
-  --docs-bg-grid: rgba(148, 163, 184, 0.06);
-  --docs-bg-glow-1: rgba(59, 130, 246, 0.05);
-  --docs-bg-glow-2: rgba(14, 165, 233, 0.04);
-  --docs-surface: rgba(255, 255, 255, 0.94);
+  --docs-bg: #f3f4f6;
+  --docs-bg-grid: transparent;
+  --docs-bg-glow-1: transparent;
+  --docs-bg-glow-2: transparent;
+  --docs-surface: #ffffff;
   --docs-surface-strong: #ffffff;
-  --docs-surface-soft: #f8fafc;
-  --docs-surface-muted: #f1f5f9;
-  --docs-border: rgba(148, 163, 184, 0.18);
-  --docs-border-strong: rgba(100, 116, 139, 0.28);
+  --docs-surface-soft: #ffffff;
+  --docs-surface-muted: #f3f4f6;
+  --docs-border: rgba(148, 163, 184, 0.16);
+  --docs-border-strong: rgba(100, 116, 139, 0.22);
   --docs-text: #0f172a;
   --docs-text-strong: #020617;
-  --docs-muted: #526072;
-  --docs-muted-soft: #708198;
+  --docs-muted: #5b6472;
+  --docs-muted-soft: #7a8493;
   --docs-primary: #1677ff;
   --docs-primary-strong: #0958d9;
-  --docs-primary-soft: rgba(22, 119, 255, 0.1);
+  --docs-primary-soft: rgba(22, 119, 255, 0.06);
   --docs-accent: #22a2ff;
-  --docs-accent-soft: rgba(34, 162, 255, 0.08);
+  --docs-accent-soft: rgba(34, 162, 255, 0.03);
   --docs-success: #16a34a;
-  --docs-shadow: 0 12px 32px rgba(15, 23, 42, 0.05);
-  --docs-shadow-soft: 0 6px 18px rgba(15, 23, 42, 0.04);
+  --docs-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+  --docs-shadow-soft: 0 1px 3px rgba(15, 23, 42, 0.04);
   --docs-max-width: 100%;
-  --docs-topbar-start: rgba(255, 255, 255, 0.95);
-  --docs-topbar-end: rgba(248, 250, 252, 0.95);
-  --docs-topbar-border: rgba(148, 163, 184, 0.18);
+  --docs-topbar-start: #ffffff;
+  --docs-topbar-end: #ffffff;
+  --docs-topbar-border: rgba(148, 163, 184, 0.14);
   --docs-topbar-text: #0f172a;
   --docs-topbar-muted: #64748b;
-  --docs-topbar-pill: #f8fafc;
-  --docs-topbar-pill-border: rgba(148, 163, 184, 0.24);
+  --docs-topbar-pill: #ffffff;
+  --docs-topbar-pill-border: rgba(148, 163, 184, 0.18);
   --docs-hero-start: #ffffff;
-  --docs-hero-end: #f8fafc;
-  --docs-hero-border: rgba(148, 163, 184, 0.22);
+  --docs-hero-end: #ffffff;
+  --docs-hero-border: rgba(148, 163, 184, 0.16);
   --docs-hero-text: #0f172a;
   --docs-hero-muted: #526072;
   --docs-code-bg: #0b1220;
@@ -45,14 +45,14 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --docs-bg: #0b1220;
-    --docs-bg-grid: rgba(148, 163, 184, 0.04);
-    --docs-bg-glow-1: rgba(59, 130, 246, 0.06);
-    --docs-bg-glow-2: rgba(14, 165, 233, 0.05);
-    --docs-surface: rgba(15, 23, 42, 0.88);
-    --docs-surface-strong: rgba(15, 23, 42, 0.96);
-    --docs-surface-soft: rgba(18, 28, 48, 0.94);
-    --docs-surface-muted: rgba(15, 23, 42, 0.68);
+    --docs-bg: #111827;
+    --docs-bg-grid: transparent;
+    --docs-bg-glow-1: transparent;
+    --docs-bg-glow-2: transparent;
+    --docs-surface: #1f2937;
+    --docs-surface-strong: #1f2937;
+    --docs-surface-soft: #1f2937;
+    --docs-surface-muted: #111827;
     --docs-border: rgba(148, 163, 184, 0.16);
     --docs-border-strong: rgba(148, 163, 184, 0.28);
     --docs-text: #e2e8f0;
@@ -65,17 +65,17 @@
     --docs-accent: #36b4ff;
     --docs-accent-soft: rgba(54, 180, 255, 0.12);
     --docs-success: #4ade80;
-    --docs-shadow: 0 16px 34px rgba(2, 6, 23, 0.28);
-    --docs-shadow-soft: 0 8px 18px rgba(2, 6, 23, 0.18);
-    --docs-topbar-start: rgba(11, 18, 32, 0.96);
-    --docs-topbar-end: rgba(15, 23, 42, 0.96);
+    --docs-shadow: 0 2px 10px rgba(2, 6, 23, 0.18);
+    --docs-shadow-soft: 0 1px 4px rgba(2, 6, 23, 0.16);
+    --docs-topbar-start: #1f2937;
+    --docs-topbar-end: #1f2937;
     --docs-topbar-border: rgba(148, 163, 184, 0.14);
     --docs-topbar-text: #f8fafc;
     --docs-topbar-muted: #91a0b5;
-    --docs-topbar-pill: rgba(255, 255, 255, 0.04);
+    --docs-topbar-pill: #111827;
     --docs-topbar-pill-border: rgba(148, 163, 184, 0.14);
-    --docs-hero-start: rgba(11, 18, 32, 0.98);
-    --docs-hero-end: rgba(15, 23, 42, 0.96);
+    --docs-hero-start: #1f2937;
+    --docs-hero-end: #1f2937;
     --docs-hero-border: rgba(148, 163, 184, 0.14);
     --docs-hero-text: #f8fafc;
     --docs-hero-muted: #c7d2e1;
@@ -111,27 +111,7 @@ body {
     BlinkMacSystemFont,
     sans-serif;
   background-color: var(--docs-bg);
-  background-image:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.56), rgba(255, 255, 255, 0)),
-    linear-gradient(var(--docs-bg-grid) 1px, transparent 1px),
-    linear-gradient(90deg, var(--docs-bg-grid) 1px, transparent 1px),
-    radial-gradient(
-      circle at top right,
-      var(--docs-bg-glow-1),
-      transparent 30%
-    ),
-    radial-gradient(
-      circle at left bottom,
-      var(--docs-bg-glow-2),
-      transparent 26%
-    );
-  background-size:
-    auto,
-    32px 32px,
-    32px 32px,
-    auto,
-    auto;
-  background-attachment: fixed;
+  background-image: none;
   color: var(--docs-text);
 }
 
