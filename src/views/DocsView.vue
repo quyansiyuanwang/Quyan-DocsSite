@@ -245,7 +245,14 @@
 </template>
 
 <script setup lang="ts">
-import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from "vue";
+import {
+  computed,
+  nextTick,
+  onBeforeUnmount,
+  onMounted,
+  ref,
+  watch,
+} from "vue";
 import { marked } from "marked";
 import { useRoute, useRouter } from "vue-router";
 import {
@@ -290,15 +297,22 @@ const EMBED_WIDE_BREAKPOINT = 1120;
 const EMBED_XL_BREAKPOINT = 1360;
 
 const isEmbeddedWide = computed(
-  () => isEmbedded.value && embeddedViewportWidth.value >= EMBED_WIDE_BREAKPOINT,
+  () =>
+    isEmbedded.value && embeddedViewportWidth.value >= EMBED_WIDE_BREAKPOINT,
 );
 const isEmbeddedExtraWide = computed(
   () => isEmbedded.value && embeddedViewportWidth.value >= EMBED_XL_BREAKPOINT,
 );
-const showSidebarPanel = computed(() => !isEmbedded.value || isEmbeddedWide.value);
-const showEmbeddedMeta = computed(() => !isEmbedded.value || isEmbeddedWide.value);
+const showSidebarPanel = computed(
+  () => !isEmbedded.value || isEmbeddedWide.value,
+);
+const showEmbeddedMeta = computed(
+  () => !isEmbedded.value || isEmbeddedWide.value,
+);
 const showHeroSide = computed(() => !isEmbedded.value || isEmbeddedWide.value);
-const showTocPanel = computed(() => !isEmbedded.value || isEmbeddedExtraWide.value);
+const showTocPanel = computed(
+  () => !isEmbedded.value || isEmbeddedExtraWide.value,
+);
 
 let docsPageResizeObserver: ResizeObserver | null = null;
 
@@ -722,7 +736,10 @@ const openFirstMatch = async () => {
 };
 
 const copyCurrentPageUrl = async () => {
-  const url = new URL(`/${locale.value}/${currentPage.value.slug}`, window.location.origin);
+  const url = new URL(
+    `/${locale.value}/${currentPage.value.slug}`,
+    window.location.origin,
+  );
   await navigator.clipboard.writeText(url.toString());
 };
 
@@ -753,7 +770,10 @@ onMounted(() => {
   }
 
   window.addEventListener("resize", updateEmbeddedViewportWidth);
-  window.visualViewport?.addEventListener("resize", updateEmbeddedViewportWidth);
+  window.visualViewport?.addEventListener(
+    "resize",
+    updateEmbeddedViewportWidth,
+  );
   void renderMermaidDiagrams();
 });
 
@@ -761,7 +781,10 @@ onBeforeUnmount(() => {
   docsPageResizeObserver?.disconnect();
   docsPageResizeObserver = null;
   window.removeEventListener("resize", updateEmbeddedViewportWidth);
-  window.visualViewport?.removeEventListener("resize", updateEmbeddedViewportWidth);
+  window.visualViewport?.removeEventListener(
+    "resize",
+    updateEmbeddedViewportWidth,
+  );
 });
 </script>
 
