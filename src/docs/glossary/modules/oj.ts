@@ -4,7 +4,7 @@ const ojGlossaryModule: GlossaryModule = {
   entries: [
     {
       id: "oj",
-      aliases: ["oj", "oj submitter", "在线判题", "判题"],
+      aliases: ["oj", "在线判题", "判题"],
       title: {
         en: "OJ",
         "zh-CN": "OJ（在线判题）",
