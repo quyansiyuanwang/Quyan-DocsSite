@@ -21,6 +21,7 @@ This is the public bilingual user manual for the site. The layout keeps the rhyt
 - Home, chat, settings, and notification pages
 - Balance, monthly passes, relay tokens, and relay settings
 - Admin, system, logs, OJ, and API reference pages
+- Reviewer and operations pages such as app review, Auth Center review, and user online monitoring
 
 ## Search tips
 

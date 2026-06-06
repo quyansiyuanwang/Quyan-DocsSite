@@ -653,5 +653,6 @@ sequenceDiagram
 
 ## 相关页面
 
-- `account-settings`
-- `api-documentation`
+- [`account-settings`](/zh-CN/account-settings)
+- [`api-documentation`](/zh-CN/api-documentation)
+- [`oauth-app-review-management`](/zh-CN/oauth-app-review-management)

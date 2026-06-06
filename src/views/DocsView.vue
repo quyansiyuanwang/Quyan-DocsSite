@@ -72,7 +72,7 @@
           <div class="sidebar-stats">
             <div class="stat-chip">
               <span class="stat-label">{{ ui.pages }}</span>
-              <strong>{{ docsPages.length }}</strong>
+              <strong>{{ docsRegistry.pages.length }}</strong>
             </div>
             <div class="stat-chip">
               <span class="stat-label">{{ ui.toc }}</span>
@@ -261,15 +261,8 @@ import {
   SWAGGER_DOCS_URL,
   interpolateDocsContent,
 } from "@/config/site";
-import {
-  defaultDocsSlug,
-  docsPages,
-  getDocsPage,
-  normalizeDocsLocale,
-  type DocsLocale,
-  type DocsSlug,
-} from "@/docs/catalog";
-import { getGlossaryEntriesForText, type GlossaryEntry } from "@/docs/glossary";
+import { docsRegistry, type DocsLocale, type DocsSlug } from "@/docs";
+import { glossaryRegistry, type GlossaryEntry } from "@/docs/glossary";
 
 type TocItem = {
   id: string;
@@ -393,15 +386,15 @@ const toUrlLabel = (value: string) => {
 };
 
 const locale = computed<DocsLocale>(() =>
-  normalizeDocsLocale(route.params.locale as string | undefined),
+  docsRegistry.normalizeLocale(route.params.locale as string | undefined),
 );
 const currentSlug = computed<DocsSlug>(() => {
   const slug = route.params.slug as string | undefined;
   return (
-    docsPages.some((page) => page.slug === slug) ? slug : defaultDocsSlug
+    docsRegistry.hasPage(slug) ? slug : docsRegistry.defaultSlug
   ) as DocsSlug;
 });
-const currentPage = computed(() => getDocsPage(currentSlug.value));
+const currentPage = computed(() => docsRegistry.getPage(currentSlug.value));
 const docsRouteLabel = computed(
   () =>
     `${toUrlLabel(DOCS_BASE_URL)}/${locale.value}/${currentPage.value.slug}`,
@@ -435,41 +428,12 @@ const ui = computed(() => ({
     locale.value === "en" ? "Jump to glossary explanation" : "跳转到术语解释",
 }));
 
-const groupedPages = computed(() => {
-  const groups = new Map<string, typeof docsPages>();
-
-  for (const page of docsPages) {
-    const key = page.category[locale.value];
-    if (!groups.has(key)) groups.set(key, []);
-    groups.get(key)!.push(page);
-  }
-
-  return Array.from(groups.entries()).map(([label, pages]) => ({
-    label,
-    pages,
-  }));
-});
+const groupedPages = computed(() => docsRegistry.getGroupedPages(locale.value));
 
 const normalizedQuery = computed(() => query.value.trim().toLowerCase());
 
 const filteredPages = computed(() => {
-  const keyword = normalizedQuery.value;
-  if (!keyword) return docsPages;
-
-  return docsPages.filter((page) => {
-    const haystack = [
-      page.slug,
-      page.category[locale.value],
-      page.title[locale.value],
-      page.summary[locale.value],
-      page.tags.join(" "),
-      page.content[locale.value],
-    ]
-      .join(" ")
-      .toLowerCase();
-
-    return haystack.includes(keyword);
-  });
+  return docsRegistry.search(normalizedQuery.value, locale.value);
 });
 
 const searchMatches = computed(() => filteredPages.value);
@@ -667,7 +631,7 @@ const currentGlossaryEntries = computed(() => {
     currentPage.value.content[locale.value],
   ].join("\n");
 
-  return [...getGlossaryEntriesForText(pageText)].sort((left, right) =>
+  return [...glossaryRegistry.getEntriesForText(pageText)].sort((left, right) =>
     left.title[locale.value].localeCompare(right.title[locale.value]),
   );
 });
@@ -749,7 +713,7 @@ watch(
     if (slug === undefined) {
       void router.replace({
         name: "docs",
-        params: { locale: locale.value, slug: defaultDocsSlug },
+        params: { locale: locale.value, slug: docsRegistry.defaultSlug },
       });
     }
   },

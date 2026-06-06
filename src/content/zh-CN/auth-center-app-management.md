@@ -2,6 +2,15 @@
 
 此页面用于注册把本平台当作统一认证中心使用的外部应用。
 
+## 页面定位说明
+
+本页是“第三方系统如何接入认证中心”的说明文档，重点在于授权模式、JWT、JWKS 和刷新令牌机制。
+
+如果你要查看后台管理页面本身怎么操作，请改看：
+
+- [`auth-center-client-management`](/zh-CN/auth-center-client-management)
+- [`auth-center-client-review-management`](/zh-CN/auth-center-client-review-management)
+
 ## 这项能力是什么
 
 这套 Auth Center 能力**独立于现有 OAuth 2.0 功能**，不是替换 OAuth，而是新增一套面向第三方系统的认证中心方案。
@@ -264,7 +273,8 @@ Auth Center -> 仅返回 access_token
 
 ## 推荐继续阅读
 
-- `Auth Center Node SDK`
-- `Auth Center Python SDK`
-- `Auth Center Browser / SPA Example`
-- `API Documentation`
+- [`auth-center-client-management`](/zh-CN/auth-center-client-management)
+- [`auth-center-node-sdk`](/zh-CN/auth-center-node-sdk)
+- [`auth-center-python-sdk`](/zh-CN/auth-center-python-sdk)
+- [`auth-center-browser-spa-example`](/zh-CN/auth-center-browser-spa-example)
+- [`api-documentation`](/zh-CN/api-documentation)
