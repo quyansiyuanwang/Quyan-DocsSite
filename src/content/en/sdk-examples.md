@@ -17,7 +17,7 @@ Includes:
 - scenario-based SDK or demo selections
 - more complete project samples than the short snippets in this docs site
 - integration templates that can be used as a starting point
-- current OAuth paths such as `demos/oauth/node/`, `sdks/oauth/node/`, `sdks/oauth/python/`, `sdks/oauth/java/`, and `sdks/oauth/go/`
+- current OAuth paths such as `ServerSDK/demos/oauth/node/`, `ServerSDK/sdks/oauth/node/`, `ServerSDK/sdks/oauth/python/`, `ServerSDK/sdks/oauth/java/`, and `ServerSDK/sdks/oauth/go/`
 
 ### `Node SDK`
 

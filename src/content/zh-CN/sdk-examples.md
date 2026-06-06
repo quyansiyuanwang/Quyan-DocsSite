@@ -17,7 +17,7 @@
 - 按场景整理的 SDK 或 Demo
 - 比文档页代码片段更完整的工程化样例
 - 可作为二次开发起点的集成模板
-- 当前 OAuth 路径示例：`demos/oauth/node/`、`sdks/oauth/node/`、`sdks/oauth/python/`、`sdks/oauth/java/`、`sdks/oauth/go/`
+- 当前 OAuth 路径示例：`ServerSDK/demos/oauth/node/`、`ServerSDK/sdks/oauth/node/`、`ServerSDK/sdks/oauth/python/`、`ServerSDK/sdks/oauth/java/`、`ServerSDK/sdks/oauth/go/`
 
 ### `Node SDK`
 

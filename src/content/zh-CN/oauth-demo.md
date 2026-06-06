@@ -2,7 +2,7 @@
 
 这页提供完整的 OAuth 授权码模式最小 demo，包括时序图、流程图、Node 模板和 Python 模板。
 
-如果你希望直接使用完整可运行工程，而不是从本页代码片段手动拼装，可以优先使用 `demos/oauth/node/`，或按语言选择 `sdks/oauth/*`。
+如果你希望直接使用完整可运行工程，而不是从本页代码片段手动拼装，可以优先使用 `ServerSDK/demos/oauth/node/`，或按语言选择 `ServerSDK/sdks/oauth/*`。
 
 <div class="docs-jump-grid">
   <a class="docs-jump-card" href="/zh-CN/node-sdk">
