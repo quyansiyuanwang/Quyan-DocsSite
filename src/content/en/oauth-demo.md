@@ -2,6 +2,8 @@
 
 This page provides a complete minimal authorization-code demo, including diagrams plus Node and Python templates.
 
+If you would rather start from a full runnable project instead of assembling the snippets manually, start with `demos/oauth/node/`, or pick a language-specific sample from `sdks/oauth/*`.
+
 <div class="docs-jump-grid">
   <a class="docs-jump-card" href="/en/node-sdk">
     <span class="docs-jump-eyebrow">Direct API calls</span>
@@ -64,10 +66,10 @@ flowchart TD
 ### Suggested structure
 
 ```text
-node-oauth-demo/
+demos/oauth/node/
 ├─ package.json
 ├─ .env
-└─ index.js
+└─ src/server.mjs
 ```
 
 ### `package.json`

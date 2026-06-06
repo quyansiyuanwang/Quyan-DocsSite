@@ -27,10 +27,10 @@ If you do not need OAuth login and only want to call a business API from your ba
 ## Suggested structure
 
 ```text
-node-sdk-demo/
+sdks/oauth/node/
 ├─ package.json
 ├─ .env
-└─ index.js
+└─ src/index.mjs
 ```
 
 ## `package.json`

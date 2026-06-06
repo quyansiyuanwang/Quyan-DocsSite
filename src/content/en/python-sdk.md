@@ -27,7 +27,7 @@ If you only need to call the API directly from Python, this is the shortest path
 ## Suggested structure
 
 ```text
-python-sdk-demo/
+sdks/oauth/python/
 ├─ requirements.txt
 ├─ .env
 └─ app.py

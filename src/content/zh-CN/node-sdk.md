@@ -27,10 +27,10 @@
 ## 推荐目录
 
 ```text
-node-sdk-demo/
+sdks/oauth/node/
 ├─ package.json
 ├─ .env
-└─ index.js
+└─ src/index.mjs
 ```
 
 ## `package.json`

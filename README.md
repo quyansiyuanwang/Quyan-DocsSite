@@ -92,6 +92,10 @@ docsSite/
 - 提供指向主站与 Swagger 的链接
 - 不直接承担主业务前端逻辑
 
+## 许可证
+
+- 本项目使用 `Apache-2.0`，见 `docsSite/LICENSE`
+
 ## 校验建议
 
 提交前建议执行：
