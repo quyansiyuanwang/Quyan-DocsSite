@@ -2,6 +2,15 @@
 
 Use this page to register external applications that treat this platform as an authentication center.
 
+## Page positioning
+
+This page is the integration guide for third-party systems. Its focus is on flow design, JWT, JWKS, and refresh-token behavior.
+
+If you need the admin-page manual for maintaining these app records, use:
+
+- [`auth-center-client-management`](/en/auth-center-client-management)
+- [`auth-center-client-review-management`](/en/auth-center-client-review-management)
+
 ## What this feature is
 
 This Auth Center feature is **separate from the existing OAuth 2.0 feature set**.
@@ -264,7 +273,8 @@ Common endpoints used by integrators:
 
 ## Recommended follow-up reading
 
-- `Auth Center Node SDK`
-- `Auth Center Python SDK`
-- `Auth Center Browser / SPA Example`
-- `API Documentation`
+- [`auth-center-client-management`](/en/auth-center-client-management)
+- [`auth-center-node-sdk`](/en/auth-center-node-sdk)
+- [`auth-center-python-sdk`](/en/auth-center-python-sdk)
+- [`auth-center-browser-spa-example`](/en/auth-center-browser-spa-example)
+- [`api-documentation`](/en/api-documentation)

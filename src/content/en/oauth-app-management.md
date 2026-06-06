@@ -650,5 +650,6 @@ Sensitive capabilities may still be limited by:
 
 ## Related pages
 
-- `account-settings`
-- `api-documentation`
+- [`account-settings`](/en/account-settings)
+- [`api-documentation`](/en/api-documentation)
+- [`oauth-app-review-management`](/en/oauth-app-review-management)
