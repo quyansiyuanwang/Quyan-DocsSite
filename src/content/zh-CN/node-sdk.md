@@ -27,17 +27,17 @@
 ## 推荐目录
 
 ```text
-node-sdk-demo/
+ServerSDK/sdks/oauth/node/
 ├─ package.json
 ├─ .env
-└─ index.js
+└─ src/index.mjs
 ```
 
 ## `package.json`
 
 ```json
 {
-  "name": "node-sdk-demo",
+  "name": "quyan-oauth-sdk-node",
   "private": true,
   "type": "module",
   "scripts": {

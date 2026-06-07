@@ -35,6 +35,12 @@ This is the public bilingual user manual for the site. The layout keeps the rhyt
 - API docs: {{SWAGGER_DOCS_URL}}
 - User manual: {{DOCS_BASE_URL}}
 
+## SDK and demo entry points
+
+- If you only need to call the API quickly, start with `Node SDK`, `Python SDK`, or `OAuth Demo` inside this docs site.
+- If you want runnable projects, integration templates, or a broader example collection, start with the `Quyan-ServerSDK` layout in this workspace.
+- `Quyan-ServerSDK` is intended to provide the most suitable SDK or demo by scenario, such as `ServerSDK/demos/oauth/node/` for a full browser flow and `ServerSDK/sdks/oauth/*` for multi-language server-side integration templates.
+
 ## Example route
 
 ```text

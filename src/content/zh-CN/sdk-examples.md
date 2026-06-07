@@ -4,6 +4,21 @@
 
 ## 如何选择
 
+### `Quyan-ServerSDK` 目录
+
+适合：
+
+- 希望直接拿到可运行示例工程的接入方
+- 需要按接入方式快速选择 SDK 或 Demo 的团队
+- 想先跑通流程、再回头精简到最小代码的场景
+
+你会看到：
+
+- 按场景整理的 SDK 或 Demo
+- 比文档页代码片段更完整的工程化样例
+- 可作为二次开发起点的集成模板
+- 当前 OAuth 路径示例：`ServerSDK/demos/oauth/node/`、`ServerSDK/sdks/oauth/node/`、`ServerSDK/sdks/oauth/python/`、`ServerSDK/sdks/oauth/java/`、`ServerSDK/sdks/oauth/go/`
+
 ### `Node SDK`
 
 适合：
@@ -96,6 +111,7 @@
 
 ## 推荐阅读顺序
 
+0. 如果你更偏向“先运行一个完整工程”，先查看 `Quyan-ServerSDK` 目录结构，再按场景选择对应 SDK 或 Demo。
 1. 先看 `OAuth App Management`，完成应用创建与回调地址登记。
 2. 再看 `OAuth Demo`，跑通授权码流程。
 3. 如果你只是调业务接口，则直接看 `Node SDK` 或 `Python SDK`。
@@ -113,6 +129,7 @@
 
 ## 推荐联动阅读
 
+- `Quyan-ServerSDK`
 - `Node SDK`
 - `Python SDK`
 - `OAuth Demo`

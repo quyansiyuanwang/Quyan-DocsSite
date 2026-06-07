@@ -27,17 +27,17 @@ If you do not need OAuth login and only want to call a business API from your ba
 ## Suggested structure
 
 ```text
-node-sdk-demo/
+ServerSDK/sdks/oauth/node/
 ├─ package.json
 ├─ .env
-└─ index.js
+└─ src/index.mjs
 ```
 
 ## `package.json`
 
 ```json
 {
-  "name": "node-sdk-demo",
+  "name": "quyan-oauth-sdk-node",
   "private": true,
   "type": "module",
   "scripts": {
