@@ -37,7 +37,7 @@ ServerSDK/sdks/oauth/node/
 
 ```json
 {
-  "name": "node-sdk-demo",
+  "name": "quyan-oauth-sdk-node",
   "private": true,
   "type": "module",
   "scripts": {

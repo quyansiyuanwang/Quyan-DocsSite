@@ -66,7 +66,7 @@ flowchart TD
 ### 目录建议
 
 ```text
-demos/oauth/node/
+ServerSDK/demos/oauth/node/
 ├─ package.json
 ├─ .env
 └─ src/server.mjs
@@ -76,7 +76,7 @@ demos/oauth/node/
 
 ```json
 {
-  "name": "node-oauth-demo",
+  "name": "quyan-oauth-demo-node",
   "private": true,
   "type": "module",
   "scripts": {
@@ -194,7 +194,7 @@ app.listen(port, () => {
 ### 目录建议
 
 ```text
-python-oauth-demo/
+ServerSDK/sdks/oauth/python/
 ├─ requirements.txt
 ├─ .env
 └─ app.py
