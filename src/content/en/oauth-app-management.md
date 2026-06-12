@@ -397,27 +397,6 @@ This section should be very explicit because it is one of the most common OAuth 
 - Mixing test and production environments
 - Using a frontend page URL instead of the actual backend callback handler
 
-## Recommended next additions for the docs site
-
-To make the docs feel like a real documentation center instead of plain notes, consider adding:
-
-1. Authorization-page screenshots or flow diagrams
-2. A full PKCE example
-3. Refresh-token examples
-4. Scope reference tables with sensitivity notes
-5. Troubleshooting checklists for common OAuth errors
-
-## Related pages
-
-- `api-documentation`
-- `access-key-management`
-- `account-settings`
-- `client_id`: the client ID from the management page.
-- `redirect_uri`: must exactly match one registered redirect URI.
-- `scope`: scopes requested for this authorization, separated by spaces.
-- `state`: strongly recommended for CSRF protection and request correlation.
-- `code_challenge` and `code_challenge_method`: recommended with PKCE, especially for public clients.
-
 ### Step 2: User approval
 
 When the user opens the authorization URL, the system shows:
