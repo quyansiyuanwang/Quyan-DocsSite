@@ -36,11 +36,11 @@ Use this page to review, process, and respond to user-submitted feedback (sugges
 
 ## Permission requirements
 
-| Action | Required permission |
-|--------|---------------------|
-| View feedback list / detail | `FEEDBACK_REVIEW_READ` |
+| Action                                  | Required permission      |
+| --------------------------------------- | ------------------------ |
+| View feedback list / detail             | `FEEDBACK_REVIEW_READ`   |
 | Update status / priority / add comments | `FEEDBACK_REVIEW_UPDATE` |
-| Delete feedback | `FEEDBACK_REVIEW_UPDATE` |
+| Delete feedback                         | `FEEDBACK_REVIEW_UPDATE` |
 
 ## Notes
 

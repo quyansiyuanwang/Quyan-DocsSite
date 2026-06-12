@@ -33,13 +33,13 @@
 
 ## 权限要求
 
-| 操作 | 所需权限 |
-|------|----------|
-| 查看群组列表 / 详情 | `GROUP_READ` |
-| 创建群组 | `GROUP_CREATE` |
-| 编辑群组 | `GROUP_UPDATE` |
-| 删除群组 | `GROUP_DELETE` |
-| 修改群组权限 | `GROUP_PERMISSION_ADD` |
+| 操作                | 所需权限               |
+| ------------------- | ---------------------- |
+| 查看群组列表 / 详情 | `GROUP_READ`           |
+| 创建群组            | `GROUP_CREATE`         |
+| 编辑群组            | `GROUP_UPDATE`         |
+| 删除群组            | `GROUP_DELETE`         |
+| 修改群组权限        | `GROUP_PERMISSION_ADD` |
 
 ## 层级限制
 

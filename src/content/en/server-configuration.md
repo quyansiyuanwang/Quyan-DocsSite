@@ -17,16 +17,16 @@ Use this page to maintain global server-side settings. All write operations requ
 
 ### Configuration sections
 
-| Section | Key parameters |
-|---------|----------------|
-| **Registration** | Open/closed toggle, max accounts per email, default group, verification code expiry (seconds) |
-| **Billing** | Recharge ratio (`rechargeRatio`) |
-| **SMTP** | Host, port, TLS, sender account and display name |
-| **Captcha** | Provider (`recaptcha` / `turnstile` etc.), fallback provider, minimum score, trust window (minutes) |
-| **Heartbeat** | Interval seconds, timeout seconds |
-| **IP ban** | Three-tier thresholds and ban durations, error-decay switch and rate |
-| **Relay** | Upstream URL and API key |
-| **Notification** | Default subscribed events, balance alert thresholds |
+| Section          | Key parameters                                                                                      |
+| ---------------- | --------------------------------------------------------------------------------------------------- |
+| **Registration** | Open/closed toggle, max accounts per email, default group, verification code expiry (seconds)       |
+| **Billing**      | Recharge ratio (`rechargeRatio`)                                                                    |
+| **SMTP**         | Host, port, TLS, sender account and display name                                                    |
+| **Captcha**      | Provider (`recaptcha` / `turnstile` etc.), fallback provider, minimum score, trust window (minutes) |
+| **Heartbeat**    | Interval seconds, timeout seconds                                                                   |
+| **IP ban**       | Three-tier thresholds and ban durations, error-decay switch and rate                                |
+| **Relay**        | Upstream URL and API key                                                                            |
+| **Notification** | Default subscribed events, balance alert thresholds                                                 |
 
 ### Public read-only endpoints
 

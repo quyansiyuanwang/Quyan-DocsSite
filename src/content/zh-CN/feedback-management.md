@@ -36,11 +36,11 @@
 
 ## 权限要求
 
-| 操作 | 所需权限 |
-|------|----------|
-| 查看反馈列表 / 详情 | `FEEDBACK_REVIEW_READ` |
+| 操作                         | 所需权限                 |
+| ---------------------------- | ------------------------ |
+| 查看反馈列表 / 详情          | `FEEDBACK_REVIEW_READ`   |
 | 更新状态 / 优先级 / 添加评论 | `FEEDBACK_REVIEW_UPDATE` |
-| 删除反馈 | `FEEDBACK_REVIEW_UPDATE` |
+| 删除反馈                     | `FEEDBACK_REVIEW_UPDATE` |
 
 ## 说明
 

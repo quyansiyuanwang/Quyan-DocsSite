@@ -34,10 +34,10 @@ Use this page to manage how the system contacts you about important events, and 
 
 Admins can change the following global defaults via the **server configuration** page (stored under `CONFIG_KEYS.NOTIFICATION`):
 
-| Setting | Meaning |
-|---------|---------|
-| `defaultSubscribedEvents` | Default event subscriptions for new users |
-| `defaultThresholds` | Default balance alert thresholds for new users |
+| Setting                   | Meaning                                        |
+| ------------------------- | ---------------------------------------------- |
+| `defaultSubscribedEvents` | Default event subscriptions for new users      |
+| `defaultThresholds`       | Default balance alert thresholds for new users |
 
 Changes to global defaults only affect newly created accounts, not existing users.
 

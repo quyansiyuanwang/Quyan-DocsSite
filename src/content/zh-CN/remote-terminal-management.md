@@ -35,15 +35,15 @@
 
 ## 权限要求
 
-| 操作 | 所需权限 |
-|------|----------|
-| 查看套餐模板 | `REMOTE_TERMINAL_PRODUCT_READ` |
-| 创建 / 编辑 / 删除模板 | `REMOTE_TERMINAL_PRODUCT_WRITE` |
-| 查看用户权益 | `REMOTE_TERMINAL_ASSIGNMENT_READ` |
-| 分配 / 更新 / 删除权益 | `REMOTE_TERMINAL_ASSIGNMENT_WRITE` |
-| 查看注册令牌 | `REMOTE_TERMINAL_REGISTRATION_TOKEN_WRITE` |
-| 查看设备列表（管理端） | `REMOTE_TERMINAL_DEVICE_MANAGE_READ` |
-| 撤销设备 | `REMOTE_TERMINAL_DEVICE_WRITE` |
+| 操作                   | 所需权限                                   |
+| ---------------------- | ------------------------------------------ |
+| 查看套餐模板           | `REMOTE_TERMINAL_PRODUCT_READ`             |
+| 创建 / 编辑 / 删除模板 | `REMOTE_TERMINAL_PRODUCT_WRITE`            |
+| 查看用户权益           | `REMOTE_TERMINAL_ASSIGNMENT_READ`          |
+| 分配 / 更新 / 删除权益 | `REMOTE_TERMINAL_ASSIGNMENT_WRITE`         |
+| 查看注册令牌           | `REMOTE_TERMINAL_REGISTRATION_TOKEN_WRITE` |
+| 查看设备列表（管理端） | `REMOTE_TERMINAL_DEVICE_MANAGE_READ`       |
+| 撤销设备               | `REMOTE_TERMINAL_DEVICE_WRITE`             |
 
 ## 常见操作
 

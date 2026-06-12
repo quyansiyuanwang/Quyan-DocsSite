@@ -33,13 +33,13 @@ Use this page to maintain user groups and the permission sets assigned to them. 
 
 ## Permission requirements
 
-| Action | Required permission |
-|--------|---------------------|
-| View group list / details | `GROUP_READ` |
-| Create group | `GROUP_CREATE` |
-| Edit group | `GROUP_UPDATE` |
-| Delete group | `GROUP_DELETE` |
-| Set group permissions | `GROUP_PERMISSION_ADD` |
+| Action                    | Required permission    |
+| ------------------------- | ---------------------- |
+| View group list / details | `GROUP_READ`           |
+| Create group              | `GROUP_CREATE`         |
+| Edit group                | `GROUP_UPDATE`         |
+| Delete group              | `GROUP_DELETE`         |
+| Set group permissions     | `GROUP_PERMISSION_ADD` |
 
 ## Level hierarchy rules
 

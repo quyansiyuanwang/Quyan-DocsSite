@@ -35,15 +35,15 @@ Use this page to manage remote terminal product plans, user entitlements, and de
 
 ## Permission requirements
 
-| Action | Required permission |
-|--------|---------------------|
-| View templates | `REMOTE_TERMINAL_PRODUCT_READ` |
-| Create / edit / delete templates | `REMOTE_TERMINAL_PRODUCT_WRITE` |
-| View entitlements | `REMOTE_TERMINAL_ASSIGNMENT_READ` |
-| Assign / update / delete entitlements | `REMOTE_TERMINAL_ASSIGNMENT_WRITE` |
-| View registration tokens | `REMOTE_TERMINAL_REGISTRATION_TOKEN_WRITE` |
-| View device list (admin) | `REMOTE_TERMINAL_DEVICE_MANAGE_READ` |
-| Revoke devices | `REMOTE_TERMINAL_DEVICE_WRITE` |
+| Action                                | Required permission                        |
+| ------------------------------------- | ------------------------------------------ |
+| View templates                        | `REMOTE_TERMINAL_PRODUCT_READ`             |
+| Create / edit / delete templates      | `REMOTE_TERMINAL_PRODUCT_WRITE`            |
+| View entitlements                     | `REMOTE_TERMINAL_ASSIGNMENT_READ`          |
+| Assign / update / delete entitlements | `REMOTE_TERMINAL_ASSIGNMENT_WRITE`         |
+| View registration tokens              | `REMOTE_TERMINAL_REGISTRATION_TOKEN_WRITE` |
+| View device list (admin)              | `REMOTE_TERMINAL_DEVICE_MANAGE_READ`       |
+| Revoke devices                        | `REMOTE_TERMINAL_DEVICE_WRITE`             |
 
 ## Common actions
 
