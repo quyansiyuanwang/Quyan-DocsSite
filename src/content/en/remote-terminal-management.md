@@ -60,6 +60,7 @@ Use this page to manage remote terminal product plans, user entitlements, and de
 - **Admin device revocation is not subject to unbind rate limits** — administrators can revoke any device at any time without restriction.
 - **Limit caps are high (up to 999999)** — administrators can set device and terminal limits well beyond standard bounds to accommodate special requests.
 - The entitlements table provides a dedicated **Adjust Limits** action for quickly modifying device/terminal limits without opening the full edit form.
+- The Adjust Limits dialog also includes a **Reset Count** button to reset the device unbind rate-limit window for a user, allowing them to unbind devices again immediately.
 
 ## Related pages
 
